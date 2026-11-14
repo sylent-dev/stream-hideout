@@ -1,0 +1,33 @@
+# Temporary files the owner gives Claude Code for context: screenshots,
+# examples, references. Never committed; only .gitkeep is tracked.
+/inputs/*
+!/inputs/.gitkeep
+
+# Temporary files Claude Code produces for the owner: reports, review
+# notes, previews, screenshots. Never committed; only .gitkeep is tracked.
+/outputs/*
+!/outputs/.gitkeep
+
+# Personal Claude Code settings.
+/.claude/settings.local.json
+
+# Secrets: the stream key, the tokens of Twitch and of the alert services.
+# Only the example file, without any value, is committed.
+.env
+.env.*
+!.env.example
+
+# The OBS file that holds the stream key, if a profile is ever exported.
+service.json
+
+# Recordings and stream tests: too heavy for Git.
+*.mkv
+*.mp4
+*.flv
+
+# Caches of Python scripts.
+__pycache__/
+
+# System and editor files.
+.DS_Store
+Thumbs.db
