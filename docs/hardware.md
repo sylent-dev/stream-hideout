@@ -36,7 +36,9 @@ Two iiyama screens, 27 inches (60 × 34 cm), model name `PL2770QS` in their EDID
 | `DP-2` | left | 2560 × 1440 at 165 Hz | 1 (primary) |
 | `DP-3` | right | 2560 × 1440 at 165 Hz | 2 |
 
-Scale 100 %, HDR and VRR off (read with `kscreen-doctor -o`). A stream is usually sent in 1920 × 1080 or less: OBS scales the 2560 × 1440 picture down (step 4).
+Scale 100 %, HDR and VRR off (read with `kscreen-doctor -o`).
+
+The owner plays on `DP-2` (left) and keeps OBS and the chat on `DP-3` (right). A stream is usually sent in 1920 × 1080 or less: OBS scales the 2560 × 1440 picture down (step 4).
 
 ## Audio
 
@@ -49,7 +51,7 @@ PipeWire handles the sound. The devices found by `pactl`:
 | Ryzen HD Audio Controller (motherboard) | jacks | nothing plugged in seen | digital (S/PDIF) |
 | Navi 48 HDMI/DP Audio (graphics card) | through the screens | none | the screens' sound |
 
-The headset microphone is the one to use: it is close to the mouth and picks up less of the room and of the keyboard than the webcam's. The volume of 120 % amplifies the signal digitally: step 5 sets the level in OBS instead, and checks it does not clip (saturate).
+The headset microphone is the only microphone for now, and the one to use: it is close to the mouth and picks up less of the room and of the keyboard than the webcam's. The volume of 120 % amplifies the signal digitally: step 5 sets the level in OBS instead, and checks it does not clip (saturate). A dedicated microphone is a planned purchase, ranked at step 10.
 
 ## Webcam
 
@@ -58,7 +60,7 @@ OBSBOT Meet 2, USB, read with `v4l2-ctl --list-devices`:
 - MJPEG (compressed): 3840 × 2160, 1920 × 1080, 1280 × 720;
 - YUYV (uncompressed): 640 × 480 and 640 × 360 only.
 
-1920 × 1080 in MJPEG is enough for a webcam shown in a corner of the stream. An « OBS Virtual Camera » device also exists: OBS creates it, it is not a camera.
+The webcam is on screen from the first live. 1920 × 1080 in MJPEG is enough for a webcam shown in a corner of the stream. An « OBS Virtual Camera » device also exists: OBS creates it, it is not a camera.
 
 ## Network
 
