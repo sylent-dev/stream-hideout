@@ -76,10 +76,10 @@ Before starting: the game installed, Exile Market in its folder, OBS closed.
 
 ### The plugin
 
-1. In a terminal, install the plugin, then answer `y`:
+1. In a terminal, install the plugin in the system installation, like OBS and its other plugins, then answer `y`:
 
    ```sh
-   flatpak install flathub com.obsproject.Studio.Plugin.PipeWireAudioCapture
+   flatpak install --system flathub com.obsproject.Studio.Plugin.PipeWireAudioCapture
    ```
 
 2. Start Path of Exile 2 from Steam, in **windowed fullscreen**, on the left screen (`DP-2`); start Exile Market.
