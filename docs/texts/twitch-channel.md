@@ -10,10 +10,10 @@ The texts keep French typography: the spaces before `:`, `!`, `?`, `;` and insid
 
 ### Title
 
-At most 140 characters. This one has 75, and stays the same from one live to the next.
+At most 140 characters. This one has 43, and stays the same from one live to the next.
 
 ```text
-[FR] PoE2 – Still grinding | Craft posé et prix en direct avec Exile Market
+[FR] PoE2 – Still grinding | Chill et craft
 ```
 
 ### Category and language
