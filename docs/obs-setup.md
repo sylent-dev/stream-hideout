@@ -39,7 +39,7 @@ To read the version: **Help → About** in OBS, or `flatpak info com.obsproject.
 
 ### What is already in OBS
 
-OBS has been used before on this machine: it holds a profile « Untitled » (output mode Simple, encoder x264, 6000 kbps) and a scene collection « Untitled ». A **profile** keeps the output settings (encoder, bitrate, resolution, the stream key); a **scene collection** keeps the scenes and their sources. Step 4 sets the profile for Twitch, and step 6 builds the scenes of the first live.
+OBS has been used before on this machine: it holds a profile « Untitled » and a scene collection « Untitled ». The profile was in output mode Simple with x264 at 6000 kbps; during the check of step 3 (2026-11-15), the owner applied the Advanced mode with **FFmpeg VAAPI H.264** on the RX 9070 XT. Its other output settings (bitrate, resolution, frame rate, keyframe interval) are left for step 4. A **profile** keeps the output settings (encoder, bitrate, resolution, the stream key); a **scene collection** keeps the scenes and their sources. Step 4 sets the profile for Twitch, and step 6 builds the scenes of the first live.
 
 The profile folder (`~/.var/app/com.obsproject.Studio/config/obs-studio/basic/profiles/`) holds the stream key in its `service.json`: it is never copied into this repository.
 
@@ -64,7 +64,8 @@ OBS lists its encoders in its log at each start (**Help → Log Files → View C
 
 Points to know:
 
-- **The right card.** OBS draws the picture on the RX 9070 XT, the card the screens are plugged into, so the encoder must be the one of that card. The two cards are `/dev/dri/renderD128` (RX 9070 XT, PCI `03:00.0`) and `/dev/dri/renderD129` (Radeon 610M, PCI `7c:00.0`), read with `ls -l /dev/dri/by-path/`. The FFmpeg VAAPI encoders pick by default the first device from `renderD128` that supports the codec ([`vaapi-utils.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/obs-ffmpeg/vaapi-utils.c)), here the RX 9070 XT, and their « VAAPI Device » field lists, by name, each card that supports the codec ([`obs-ffmpeg-vaapi.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/obs-ffmpeg/obs-ffmpeg-vaapi.c)).
+- **The right card.** OBS draws the picture on the RX 9070 XT, the card the screens are plugged into, so the encoder must be the one of that card. The two cards are `/dev/dri/renderD128` (RX 9070 XT, PCI `03:00.0`) and `/dev/dri/renderD129` (Radeon 610M, PCI `7c:00.0`), read with `ls -l /dev/dri/by-path/`. The « VAAPI Device » field of the FFmpeg VAAPI encoders lists, by name, each card that supports the codec, here both.
+- **Check the « VAAPI Device » field by hand.** Its default doesn't work on this machine. The default value is `/dev/dri/renderD128` ([`vaapi-utils.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/obs-ffmpeg/vaapi-utils.c)), but the entries of the list are named `/dev/dri/by-path/pci-…-render`, in the order the folder gives them ([`obs-ffmpeg-vaapi.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/obs-ffmpeg/obs-ffmpeg-vaapi.c)). The default matches no entry, so OBS selects the first one of the list and saves it ([`properties-view.cpp`](https://github.com/obsproject/obs-studio/blob/33.0.1/shared/properties-view/properties-view.cpp)): in the check of 2026-11-15, it was not the RX 9070 XT. Once `Navi 48 [Radeon RX 9070/9070 XT/9070 GRE]` is chosen and applied, the profile keeps `/dev/dri/by-path/pci-0000:03:00.0-render` (in its `streamEncoder.json`).
 - **Advanced output mode only.** The Simple output mode offers x264, and a hardware encoder only from Intel (QSV), NVIDIA (NVENC), AMD through AMF, or Apple ([`OBSBasicSettings.cpp`](https://github.com/obsproject/obs-studio/blob/33.0.1/frontend/settings/OBSBasicSettings.cpp)): no VA-API entry. The VA-API encoders show only in **Output Mode: Advanced**, which step 4 uses.
 - **No AMF.** The runtime extension `org.freedesktop.Platform.amd.amf` is installed, but OBS loads no AMF encoder (none in the log): the « Hardware (AMD, …) » entries of the Simple mode don't appear. VA-API is the way to the AMD encoder here.
 
@@ -78,8 +79,8 @@ The owner runs this check on the streaming machine, OBS closed at the start. It 
 2. **Help → About**. Expected: version 33.0.1 (or newer, if OBS was updated since: then write the new version in the table).
 3. **Help → Log Files → View Current Log**, then find `Available Encoders`. Expected: the lines `FFmpeg VAAPI H.264`, `FFmpeg VAAPI HEVC`, `FFmpeg VAAPI AV1`, and `VAAPI H.264 on Navi 48 [Radeon RX 9070/9070 XT/9070 GRE]`.
 4. **File → Settings → Output**, set **Output Mode** to **Advanced**, open the **Streaming** tab, then the **Video Encoder** list. Expected: the encoders of step 3 are in the list.
-5. In that list, choose **FFmpeg VAAPI H.264**. Expected: the **VAAPI Device** field shows `Navi 48 [Radeon RX 9070/9070 XT/9070 GRE]` (or, if OBS doesn't find the name, the path `/dev/dri/by-path/pci-0000:03:00.0-render`), not the Radeon 610M, which may be the other entry of the list.
-6. Click **Cancel**, and confirm if OBS asks. Expected: **File → Settings → Output** shows the Simple mode again, as before.
+5. In that list, choose **FFmpeg VAAPI H.264**, then open the **VAAPI Device** list. Expected: it holds `Navi 48 [Radeon RX 9070/9070 XT/9070 GRE]` (or, if OBS doesn't find the name, the path `/dev/dri/by-path/pci-0000:03:00.0-render`). Write down which entry was selected when the field opened: OBS may select the Radeon 610M (see « Check the « VAAPI Device » field by hand »).
+6. Click **Cancel**, and confirm if OBS asks. Expected: **File → Settings → Output** shows the output mode and the encoder it had before the check.
 7. Free test: anything else worth looking at in these settings or in the log (an error, a warning, a plugin missing).
 
 | Test | Result (OK / not OK) | Note |
