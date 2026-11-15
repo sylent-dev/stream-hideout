@@ -17,10 +17,11 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 - [x] **6.** The scenes `game` (the webcam in 1920 × 1080, 250 × 250 with rounded corners), `pause` and `end` (animated rain pages in `overlays/screens/`, chosen in a mock-up), and the collection `sylent-exile` exported in `obs/`: [`docs/obs-scenes.md`](docs/obs-scenes.md) (#7).
 - [x] **7.** The texts of the Twitch channel (title, tags, bio, three panels, with the Exile Market disclaimer): [`docs/texts/twitch-channel.md`](docs/texts/twitch-channel.md) (#8).
 - [x] The images of the three panels, in the storm style of the scenes, with the owner's logos: [`docs/texts/twitch-channel.md`](docs/texts/twitch-channel.md#images) (#9).
+- [x] **8.** The guide of the stream test, run as a real live: [`docs/stream-test.md`](docs/stream-test.md) (#11).
 
 ## First live
 
-- [ ] **8. `docs/stream-test`**: the guide of the stream test, with a blank table of results; its results fix the settings of steps 4 to 6 if needed.
+- [ ] **The stream test**: run [`docs/stream-test.md`](docs/stream-test.md); its results fix the settings of steps 4 to 6 if needed, in their own pull request.
 - [ ] **9. `docs/live-checklists`**: the checklists of a live day (before, during, after), in French, with the exact names of the scenes and sources.
 - [ ] **First live.**
 
