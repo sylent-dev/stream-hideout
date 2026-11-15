@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webcam glow</title>
+<!--
+  The glow behind the webcam of the scene `game` (html-mockups skill): a color that tells the viewers
+  whether the character played is hardcore (red) or softcore (blue), in place of the black shadow
+  of assets/webcam/webcam-shadow.png (docs/obs-scenes.md, « The place and the look of the webcam »).
+
+  - The webcam is drawn where OBS puts it: 250 × 250 at X 892, Y 1161 of the 2560 × 1440 canvas,
+    corners of 25 px. Its picture here is a placeholder: the owner's face isn't in the repository.
+  - The glow is a rounded square of the webcam's size, grown by `spread`, moved down by `offset`,
+    blurred by `blur` (a CSS blur is a Gaussian of that standard deviation, like Pillow's
+    GaussianBlur(radius)), at `opacity`: the same four numbers make the PNG afterwards.
+  - Proposal 1 is the black shadow of today, with its own numbers, as a reference.
+  - Chosen on 2026-11-15: the red of Exile Market (2) for hardcore, the azure blue (3) for softcore,
+    blur 20, opacity 0.5, no offset; both spreads, 5 px (11) and 10 px (12), made to be compared in
+    the stream test. The badge: the glowing text (9), Rajdhani Bold, 32 px, inside the webcam at the
+    bottom left. The other colors, styles, fonts and places stay on the page, set aside.
+  - The badges (7 to 10) are separate images in OBS, one per mode (SC, SSF SC, HC, SSF HC), drawn
+    over the webcam; their texts come from docs/texts/webcam-badges.js. Their fonts load from Google
+    Fonts here; the one chosen goes in assets/fonts/ with its license.
+  - The game behind is a screenshot of inputs/, never committed (Grinding Gear Games' content);
+    the frame falls back to a dark background when it is missing.
+
+  Serve the repository root:
+    python3 .claude/skills/html-mockups/assets/serve.py 8790
+  then open http://127.0.0.1:8790/docs/mockups/webcam.html
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@700&family=Cinzel:wght@700&family=Manrope:wght@800&family=Oswald:wght@600&family=Teko:wght@600&display=block">
+<script src="../texts/webcam-badges.js"></script>
+<style>
+  /* The font chosen for the badges, from assets/fonts/ (assets/NOTICE.md). */
+  @font-face { font-family: "Rajdhani"; font-weight: 700; font-display: block; src: url("../../assets/fonts/rajdhani-bold.ttf") format("truetype"); }
+  body { margin: 0; background: #2a2d31; color: #e9ecef; font: 14px/1.4 system-ui, sans-serif; }
+  .page-tabs { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 16px; background: #1b1d20; border-bottom: 1px solid #3a3f45; }
+  .page-tabs[hidden] { display: none; }
+  .page-tabs .group { display: flex; align-items: center; gap: 4px; }
+  .page-tabs .group > span { margin-right: 4px; color: #adb5bd; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .page-tabs button { padding: 4px 10px; border: 1px solid #3a3f45; border-radius: 4px; background: #24272b; color: #dee2e6; font: inherit; cursor: pointer; }
+  .page-tabs button[aria-pressed="true"] { background: #e9ecef; color: #1b1d20; border-color: #e9ecef; }
+  .page-tabs input[type="range"] { width: 120px; accent-color: #e9ecef; }
+  .page-tabs output { min-width: 4ch; color: #dee2e6; font-variant-numeric: tabular-nums; }
+  .page-tabs select { padding: 3px 4px; border: 1px solid #3a3f45; border-radius: 4px; background: #24272b; color: #dee2e6; font: inherit; cursor: pointer; }
+  .page-header { padding: 18px 16px 0; }
+  .page-header h1 { margin: 0 0 4px; font-size: 20px; }
+  .page-header p { margin: 0; max-width: 860px; color: #adb5bd; }
+  .page-section { padding: 8px 16px 24px; }
+  .page-section h2 { font-size: 15px; color: #adb5bd; font-weight: 600; }
+  .page-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+  .page-slot > span { display: block; margin-bottom: 6px; color: #adb5bd; font-size: 12px; max-width: 520px; }
+  .page-slot > span b { color: #e9ecef; }
+  .page-swatch { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 2px; vertical-align: -1px; }
+  .page-warning { margin: 0; padding: 10px 16px; background: #8a6a10; color: #fff; }
+
+  /* A frame: a region of the canvas (--region-x/y/w/h, in canvas pixels), scaled by --view. */
+  .page-frame { position: relative; width: calc(var(--region-w) * var(--view) * 1px); height: calc(var(--region-h) * var(--view) * 1px); overflow: hidden; box-shadow: 0 8px 30px #0008; }
+  .page-frame > .wc-canvas { position: absolute; left: 0; top: 0; transform: scale(var(--view)) translate(calc(var(--region-x) * -1px), calc(var(--region-y) * -1px)); transform-origin: 0 0; }
+
+  /* The canvas of OBS at its real size. */
+  .wc-canvas { width: 2560px; height: 1440px; background: #0b0d12 center / cover no-repeat; }
+  .wc-canvas.is-fight { background-image: url("../../inputs/Screenshot_20261115_145246.png"); }
+  .wc-canvas.is-stash { background-image: url("../../inputs/Screenshot_20261115_150246.png"); }
+
+  /* The glow: the webcam's rounded square, grown, moved down, blurred. */
+  .wc-glow {
+    position: absolute;
+    left: calc(892px - var(--spread)); top: calc(1161px - var(--spread) + var(--offset));
+    width: calc(250px + 2 * var(--spread)); height: calc(250px + 2 * var(--spread));
+    border-radius: calc(25px + var(--spread));
+    background: var(--glow); opacity: var(--opacity); filter: blur(var(--blur));
+  }
+  /* The black shadow of today (assets/webcam/webcam-shadow.png): fixed, as a reference. */
+  .wc-glow.is-today { --spread: 0px; --offset: 8px; --blur: 14px; --opacity: .6; }
+
+  /* The webcam: a placeholder picture, a head and shoulders in a warm room. */
+  .wc-webcam { position: absolute; left: 892px; top: 1161px; width: 250px; height: 250px; border-radius: 25px; overflow: hidden; background: radial-gradient(circle at 70% 25%, #6b5a4a 0%, #3a3029 45%, #211b17 100%); }
+  .wc-webcam svg { display: block; width: 100%; height: 100%; }
+
+  /* The badge: its own image in OBS, placed against the webcam's square (--badge-color is the mode's). */
+  .wc-anchor { position: absolute; left: 892px; top: 1161px; width: 250px; height: 250px; }
+  .wc-badge { position: absolute; display: inline-flex; align-items: stretch; white-space: nowrap; font-family: var(--badge-font); font-weight: var(--badge-weight); font-size: var(--badge-size); line-height: 1; letter-spacing: .06em; color: #fff; }
+  .wc-badge > span { display: flex; align-items: center; padding: .28em .55em .24em; }
+  :root[data-position="topCenter"] .wc-badge { left: 50%; top: 0; transform: translate(-50%, -50%); }
+  :root[data-position="topLeft"] .wc-badge { left: 0; top: 0; transform: translate(-22%, -50%); }
+  :root[data-position="above"] .wc-badge { left: 0; bottom: calc(100% + 12px); }
+  :root[data-position="insideBottom"] .wc-badge { left: 12px; bottom: 12px; }
+  /* 7 · Filled pill. */
+  .wc-badge.is-pill { border-radius: 999px; background: var(--badge-color); box-shadow: 0 4px 14px #0009; }
+  .wc-badge.is-pill .wc-ssf { padding-right: 0; opacity: .8; }
+  /* 8 · Outline on a dark ground. */
+  .wc-badge.is-outline { border: 3px solid var(--badge-color); border-radius: 10px; background: #0a0a0ad9; box-shadow: 0 0 16px var(--badge-color); }
+  .wc-badge.is-outline .wc-ssf { padding-right: 0; color: #a3a3a3; }
+  /* 9 · Glowing text, no ground. */
+  .wc-badge.is-glow { text-shadow: 0 0 10px var(--badge-color), 0 0 22px var(--badge-color), 0 2px 4px #000; }
+  .wc-badge.is-glow > span { padding: 0 .2em; }
+  .wc-badge.is-glow .wc-ssf { color: #d4d4d4; }
+  /* 10 · Two parts: SSF on dark gray, the mode in its color. */
+  .wc-badge.is-split { border-radius: 8px; overflow: hidden; box-shadow: 0 4px 14px #0009; }
+  .wc-badge.is-split .wc-ssf { background: #262626; color: #d4d4d4; }
+  .wc-badge.is-split .wc-mode { background: var(--badge-color); }
+</style>
+</head>
+<body>
+<p class="page-warning" id="file-warning" hidden>Opened as a file: serve the repository root (see the comment at the top of this page) so that the screenshots of inputs/ load.</p>
+<nav class="page-tabs" id="tabs" aria-label="Variants"></nav>
+<main id="sheet"></main>
+<script>
+  // How large the frames show: the canvas, the stream Twitch receives (1600 × 900), a phone.
+  const VIEWS = { canvas: { label: "Canvas (100 %)", scale: 1 }, stream: { label: "Stream (62.5 %)", scale: 0.625 }, phone: { label: "Phone (25 %)", scale: 0.25 } };
+  // Which part of the canvas: around the webcam, or the whole screen.
+  const REGIONS = { zoom: { label: "Around the webcam", box: [560, 960, 920, 480] }, full: { label: "Whole screen", box: [0, 0, 2560, 1440] } };
+  // The badges are compared four by four: a tighter region, whatever the Frame chosen.
+  const BADGE_BOX = [780, 1050, 480, 390];
+  // The fonts of the badges, all under the SIL Open Font License; Manrope is the font of the scenes.
+  const FONTS = {
+    manrope: { label: "Manrope ExtraBold (the scenes)", family: '"Manrope", sans-serif', weight: 800 },
+    cinzel: { label: "Cinzel Bold", family: '"Cinzel", serif', weight: 700 },
+    bebas: { label: "Bebas Neue", family: '"Bebas Neue", sans-serif', weight: 400 },
+    oswald: { label: "Oswald SemiBold", family: '"Oswald", sans-serif', weight: 600 },
+    chakra: { label: "Chakra Petch Bold", family: '"Chakra Petch", sans-serif', weight: 700 },
+    rajdhani: { label: "Rajdhani Bold", family: '"Rajdhani", sans-serif', weight: 700 },
+    teko: { label: "Teko SemiBold", family: '"Teko", sans-serif', weight: 600 },
+  };
+  const VARIANTS = {
+    font: { label: "Badge font", select: true, options: Object.fromEntries(Object.entries(FONTS).map(([key, font]) => [key, font.label])), fallback: "rajdhani" },
+    position: { label: "Badge place", select: true, options: { topCenter: "On the top edge, centered", topLeft: "On the top-left corner", above: "Above, on the left", insideBottom: "Inside, bottom left" }, fallback: "insideBottom" },
+    badgeSize: { label: "Badge size", range: { min: 18, max: 60, step: 1 }, variable: "--badge-size", unit: "px", fallback: "32" },
+    blue: { label: "Softcore blue", select: true, options: { 3: "3 · Bleu azur", 4: "4 · Bleu glacier", 5: "5 · Bleu roi", 6: "6 · Bleu acier" }, fallback: "3" },
+    view: { label: "View", select: true, options: Object.fromEntries(Object.entries(VIEWS).map(([key, view]) => [key, view.label])), fallback: "stream" },
+    region: { label: "Frame", select: true, options: Object.fromEntries(Object.entries(REGIONS).map(([key, region]) => [key, region.label])), fallback: "zoom" },
+    spread: { label: "Spread", range: { min: 0, max: 30, step: 1 }, variable: "--spread", unit: "px", fallback: "5" },
+    offset: { label: "Offset down", range: { min: 0, max: 16, step: 1 }, variable: "--offset", unit: "px", fallback: "0" },
+    blur: { label: "Blur", range: { min: 4, max: 40, step: 1 }, variable: "--blur", unit: "px", fallback: "20" },
+    opacity: { label: "Opacity", range: { min: 0.2, max: 1, step: 0.05 }, variable: "--opacity", fallback: "0.5" },
+  };
+
+  // The colors, numbered once across the page. 1 is the shadow of today.
+  const PROPOSALS = [
+    { number: 1, name: "Noir (aujourd’hui)", color: "#000000", today: true, text: "The shadow in OBS now: black at 60 %, 8 px lower, blur 14. The sliders don't move it." },
+    { number: 2, name: "Rouge Exile Market", color: "#e5383b", text: "Hardcore. The red of Exile Market's icon and site, and of « pause » on the scenes." },
+    { number: 3, name: "Bleu azur", color: "#3a86ff", text: "Softcore. A bright, slightly warm blue, as strong as the red." },
+    { number: 4, name: "Bleu glacier", color: "#4cc9f0", text: "Softcore. A cold cyan blue, the lightest: it shows the most on a dark game." },
+    { number: 5, name: "Bleu roi", color: "#4361ee", text: "Softcore. A deep blue toward violet, close to the mana globe; the darkest, it shows the least." },
+    { number: 6, name: "Bleu acier", color: "#6c9bd2", text: "Softcore. A grayed blue, discreet: the webcam stands out without a neon look." },
+  ];
+  // The colors chosen on 2026-11-15: 2 for hardcore, 3 for softcore, blur 20, opacity 0.5;
+  // the spread is still open: 5 px (11) or 10 px (12), each fixed, whatever the Spread slider.
+  const CHOSEN_COLORS = [2, 3];
+  const SPREADS = [
+    { number: 11, spread: 5, text: "Spread 5 px: a thin glow that hugs the webcam." },
+    { number: 12, spread: 10, text: "Spread 10 px: a wider glow, that reaches further into the game." },
+  ];
+  const BADGE_STYLES = [
+    { number: 7, name: "Pastille pleine", style: "is-pill", text: "A pill in the mode's color, white letters." },
+    { number: 8, name: "Contour", style: "is-outline", text: "A dark tag outlined in the mode's color, with a faint glow." },
+    { number: 9, name: "Texte lumineux", style: "is-glow", text: "Letters alone, lit by the mode's color: the lightest on the picture." },
+    { number: 10, name: "Deux parties", style: "is-split", text: "SSF on dark gray, the mode in its color: the two pieces of information read apart." },
+  ];
+  const BACKGROUNDS = [
+    ["In a fight, a dark area", "is-fight"],
+    ["At the stash, with the inventory and the price window", "is-stash"],
+  ];
+
+  const params = new URLSearchParams(location.search);
+  const accepts = (variant, value) => variant.range
+    ? value !== null && Number(value) >= variant.range.min && Number(value) <= variant.range.max
+    : value in variant.options;
+  const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
+    [key, accepts(variant, params.get(key)) ? params.get(key) : variant.fallback]));
+  // ?only=N shows proposal N alone, without the controls, for an export.
+  const only = Number(params.get("only")) || null;
+
+  const PERSON = `<svg viewBox="0 0 250 250" aria-hidden="true"><ellipse cx="125" cy="280" rx="105" ry="90" fill="#15110e"/><ellipse cx="125" cy="112" rx="46" ry="56" fill="#b48c70"/><path d="M78 100c0-40 22-58 48-58s48 18 48 58c-8-22-26-30-48-30s-40 8-48 30z" fill="#2a1f19"/></svg>`;
+  const box = ([x, y, w, h]) => `--region-x:${x};--region-y:${y};--region-w:${w};--region-h:${h}`;
+  const wcBadge = (badge, style) => `<div class="wc-anchor"><div class="wc-badge ${style}">${
+    badge.ssf ? `<span class="wc-ssf">${badge.ssf}</span>` : ""}<span class="wc-mode">${badge.mode}</span></div></div>`;
+  const wcFrame = (proposal, background, extra = "", region = null, spread = null) => `<div class="page-frame" ${region ? `style="${box(region)}"` : ""}><div class="wc-canvas ${background}">
+      <div class="wc-glow ${proposal.today ? "is-today" : ""}" style="--glow: ${proposal.color}${spread === null ? "" : `; --spread: ${spread}px`}"></div>
+      <div class="wc-webcam">${PERSON}</div>${extra}
+    </div></div>`;
+  // A badge's frame: the glow and the badge take the color of its mode.
+  function badgeFrame(key, style) {
+    const badge = WEBCAM_BADGES[key];
+    const color = badge.hardcore ? PROPOSALS[1] : PROPOSALS.find(proposal => proposal.number === Number(chosen.blue));
+    return `<div class="page-slot" style="--badge-color: ${color.color}"><span><b>${badge.ssf ? badge.ssf + " " : ""}${badge.mode}</b></span>${
+      wcFrame(color, "is-fight", wcBadge(badge, style), BADGE_BOX)}</div>`;
+  }
+
+  function applyVariables() {
+    const root = document.documentElement.style;
+    for (const [key, variant] of Object.entries(VARIANTS)) {
+      if (variant.variable) root.setProperty(variant.variable, chosen[key] + (variant.unit ?? ""));
+    }
+    root.setProperty("--badge-font", FONTS[chosen.font].family);
+    root.setProperty("--badge-weight", FONTS[chosen.font].weight);
+    document.documentElement.dataset.position = chosen.position;
+    const [x, y, w, h] = REGIONS[chosen.region].box;
+    root.setProperty("--view", VIEWS[chosen.view].scale);
+    root.setProperty("--region-x", x); root.setProperty("--region-y", y);
+    root.setProperty("--region-w", w); root.setProperty("--region-h", h);
+  }
+  const keepInAddress = () => history.replaceState(null, "", "?" + new URLSearchParams({ ...chosen, ...(only ? { only } : {}) }));
+
+  function render() {
+    applyVariables();
+    const tabs = document.getElementById("tabs");
+    tabs.hidden = Boolean(only);
+    tabs.innerHTML = Object.entries(VARIANTS).map(([key, variant]) => variant.range
+      ? `<label class="group"><span>${variant.label}</span><input type="range" data-variant="${key}" min="${variant.range.min}" max="${variant.range.max}" step="${variant.range.step}" value="${chosen[key]}"><output>${chosen[key]}${variant.unit ?? ""}</output></label>`
+      : `<label class="group"><span>${variant.label}</span><select data-variant="${key}">${Object.entries(variant.options).map(([value, label]) =>
+        `<option value="${value}" ${chosen[key] === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>`).join("");
+    const shown = only ? PROPOSALS.filter(proposal => proposal.number === only) : PROPOSALS;
+    const badgeStyles = only ? BADGE_STYLES.filter(style => style.number === only) : BADGE_STYLES;
+    document.getElementById("sheet").innerHTML = `
+      ${only ? "" : `<header class="page-header"><h1>Webcam glow and mode badge</h1><p>The color behind the webcam of the scene <code>game</code>, and a badge for the mode played, over the game. Proposals are numbered once: give their number. The glow sliders apply to every color but 1, so that the red and the blue chosen match; the address keeps every choice.</p></header>`}
+      ${(only ? SPREADS.filter(item => item.number === only) : SPREADS).map(item => `<section class="page-section">${only ? "" : `<h2>${item.number} · ${item.text} The colors chosen, 2 and 3, blur ${chosen.blur} px, opacity ${chosen.opacity}.</h2>`}<div class="page-row">${
+        BACKGROUNDS.flatMap(([title, background]) => CHOSEN_COLORS.map(number => {
+          const proposal = PROPOSALS.find(candidate => candidate.number === number);
+          return `<div class="page-slot">${only ? "" : `<span><span class="page-swatch" style="background:${proposal.color}"></span><b>${proposal.name}</b> — ${title.toLowerCase()}</span>`}${wcFrame(proposal, background, "", null, item.spread)}</div>`;
+        })).join("")}</div></section>`).join("")}
+      ${badgeStyles.map(style => `<section class="page-section">${only ? "" : `<h2>${style.number} · ${style.name} — ${style.text} One image per mode; hardcore in red (2), softcore in the blue chosen.</h2>`}<div class="page-row">${
+        Object.keys(WEBCAM_BADGES).map(key => badgeFrame(key, style.style)).join("")}</div></section>`).join("")}
+      ${only && !shown.length ? "" : BACKGROUNDS.map(([title, background]) => `<section class="page-section">${only ? "" : `<h2>${title}</h2>`}<div class="page-row">${
+        shown.map(proposal => `<div class="page-slot">${only ? "" : `<span><span class="page-swatch" style="background:${proposal.color}"></span><b>${proposal.number} · ${proposal.name}</b> ${proposal.color} — ${proposal.text}</span>`}${wcFrame(proposal, background)}</div>`).join("")}</div></section>`).join("")}`;
+  }
+  // A list (the blue, the font, the place, the view) redraws the frames; a slider only moves a variable.
+  function redrawIfList(variant) {
+    if (!VARIANTS[variant].range) render();
+  }
+
+  document.getElementById("tabs").addEventListener("input", event => {
+    const { variant } = event.target.dataset;
+    if (!variant) return;
+    chosen[variant] = event.target.value;
+    if (VARIANTS[variant].range) event.target.nextElementSibling.value = chosen[variant] + (VARIANTS[variant].unit ?? "");
+    keepInAddress();
+    applyVariables();
+    redrawIfList(variant);
+  });
+  document.getElementById("file-warning").hidden = location.protocol !== "file:";
+  render();
+</script>
+</body>
+</html>

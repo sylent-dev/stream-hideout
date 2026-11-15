@@ -8,7 +8,7 @@ The canvas is 2560 × 1440 ([`obs-output.md`](obs-output.md)); every position be
 
 | Scene | Sources, from front to back | What the viewers see and hear |
 |---|---|---|
-| `game` | `webcam`, `webcam-shadow`, `game-audio`, `game-screen` | the left screen, the webcam in a 250 × 250 square with rounded corners and a soft shadow; the game and the voice |
+| `game` | `webcam-badge-sc`, `webcam-badge-ssf-sc`, `webcam-badge-hc`, `webcam-badge-ssf-hc`, `webcam`, `webcam-glow-hardcore`, `webcam-glow-softcore`, `game-audio`, `game-screen` | the left screen, the webcam in a 250 × 250 square with rounded corners, a red glow and badge in hardcore, blue in softcore; the game and the voice |
 | `pause` | `pause-screen` | « Petite pause » over a dark rain, now and then a lightning; the voice only |
 | `end` | `end-screen` | « Merci d’avoir regardé ! » over the same rain, the link of Exile Market and the Grinding Gear Games disclaimer; the voice only |
 
@@ -34,13 +34,31 @@ If the camera sends one damaged picture, the source stops for good and shows a g
 
 The owner chose the place on two screenshots of 2026-11-15: in a fight, and with the stash, the inventory and the price window of Exile Market open. The webcam sits at the bottom, just right of the stash panel and left of the character: it hides neither the life globe, the skills, the inventory, nor the price window, which opens beside the panel of the game ([README of Exile Market](https://github.com/sylent-dev/rust-exile-market#copy-an-item)).
 
-It is 250 × 250 on the canvas, about 156 × 156 on the stream (1600 × 900): the owner wants it discreet, so the game stays in front. Its look follows a reference the owner gave, rounded corners and a soft shadow, with no plugin:
+It is 250 × 250 on the canvas, about 156 × 156 on the stream (1600 × 900): the owner wants it discreet, so the game stays in front. Its look follows a reference the owner gave, rounded corners and a soft shadow, with no plugin; the shadow became a glow in the color of the mode played (see [The mode played: glow and badge](#the-mode-played-glow-and-badge)):
 
 - the **Crop/Pad** filter cuts the 1920 × 1080 picture into a 1080 × 1080 square;
 - the **Image Mask/Blend** filter, type **Alpha Mask (Alpha Channel)**, keeps only the pixels under the opaque part of [`assets/webcam/webcam-mask.png`](../assets/webcam/webcam-mask.png): a white 1080 × 1080 square with corners of 108 pixels (25 once shown at 250);
-- OBS has no shadow filter: an **Image** source, [`assets/webcam/webcam-shadow.png`](../assets/webcam/webcam-shadow.png), sits behind the webcam. It is 346 × 346, drawn at its size on the canvas: a rounded square of 250, 8 pixels lower than the webcam, black at 60 %, blurred over 14 pixels.
+- OBS has no shadow filter: an **Image** source sits behind the webcam, with a glow drawn in advance.
 
-Both images were generated for this project with Python (Pillow). A webcam of another size needs a new shadow, drawn at that size.
+The mask and the glows were generated for this project with Python (Pillow). A webcam of another size needs new glows, drawn at that size.
+
+### The mode played: glow and badge
+
+The owner plays hardcore (a character that dies is lost for the league) or softcore, alone or in solo self-found (SSF: no trade with other players). The webcam tells the viewers which, by two images chosen on 2026-11-15 in the mock-up [`mockups/webcam.html`](mockups/webcam.html):
+
+- **The glow** behind the webcam, in place of the black shadow, which hardly showed on the dark areas of the game: the red of Exile Market (`#e5383b`, the red of the scenes) for hardcore, an azure blue (`#3a86ff`) for softcore. A rounded square of the webcam's size, grown by its spread, centered (no offset), blurred over 20 pixels (Pillow's `GaussianBlur(20)`, a standard deviation, like a CSS `blur(20px)`), at 50 % opacity. Two spreads are made, so that the stream test settles which shows best: 5 pixels (`narrow`) and 10 pixels (`wide`). The four images are 390 × 390, drawn at their size at X `822`, Y `1091`, so that changing the file of a source needs no new position.
+- **The badge** at the bottom left inside the webcam, one image per mode, whose texts are in [`texts/webcam-badges.js`](texts/webcam-badges.js): `SC`, `SSF SC`, `HC`, `SSF HC`. Letters lit by the color of the mode, with no ground (style 9 of the mock-up), in Rajdhani Bold at 32 pixels ([`assets/fonts/rajdhani-bold.ttf`](../assets/fonts/rajdhani-bold.ttf)), « SSF » in light gray. The four images are 199 × 112, the text at the same place in each, drawn at their size at X `864`, Y `1327`. They were rendered from section 9 of the mock-up with Playwright, on a transparent background; a new badge is rendered the same way.
+
+| Mode | Glow (visible) | Badge (visible) |
+|---|---|---|
+| Softcore | `webcam-glow-softcore` | `webcam-badge-sc` |
+| SSF softcore | `webcam-glow-softcore` | `webcam-badge-ssf-sc` |
+| Hardcore | `webcam-glow-hardcore` | `webcam-badge-hc` |
+| SSF hardcore | `webcam-glow-hardcore` | `webcam-badge-ssf-hc` |
+
+Before each live, the owner shows the glow and the badge of the character played, with the **eye** icon of the **Sources** dock, and hides the others: the checklist of the live day holds this step. A color alone tells nothing to a new viewer: the badge, and the mode in the title of the live, say it in words.
+
+Set aside in the mock-up: the other blues (glacier, royal, steel), the badges on a ground (pill, outline, two parts), the other fonts and places.
 
 ### `pause` and `end`: animated web pages
 
@@ -73,7 +91,7 @@ OBS saves a scene collection by itself, in its Flatpak folder. The export copies
 - the `RestoreToken` of `game-screen`: the permission KDE gave to OBS to capture the screen, tied to this machine. After an import, OBS asks for the screen once ([`obs-capture.md`](obs-capture.md#the-picture-screen-capture));
 - the absolute paths, which hold the owner's user name: `overlays/screens/pause.html` replaces `/var/home/<user>/…/stream-hideout/overlays/screens/pause.html`.
 
-After an import, **Scene Collection → Check for Missing Files** lists the pages and the shadow, and **Search Directory...** finds them in the repository. The mask of the webcam isn't listed there (the filter doesn't declare its file to OBS): open the **Filters** of `webcam` and choose the mask again.
+After an import, **Scene Collection → Check for Missing Files** lists the pages and the images of the webcam, and **Search Directory...** finds them in the repository. The mask of the webcam isn't listed there (the filter doesn't declare its file to OBS): open the **Filters** of `webcam` and choose the mask again.
 
 ## Procedure
 
@@ -113,19 +131,23 @@ Before starting: the game and Exile Market running on the left screen (`DP-2`), 
     - every **Crop** field at `0` (the crop is done by the filter).
     Click **Close**.
 
-### The shadow of the webcam
+### The glow and the badge of the webcam
 
-11. In the **Sources** dock, click **+**, then **Image**. **Create new**, name `webcam-shadow`, then **OK**.
-12. **Image File**: **Browse**, then `assets/webcam/webcam-shadow.png` in the repository. Click **OK**.
-13. Right-click `webcam-shadow`, then **Transform → Edit Transform**: **Position** **X** `844`, **Y** `1113`; **Alignment**: **Top Left**; **Size**: **Width** `346`, **Height** `346`. Click **Close**.
-14. Put the sources in this order in the **Sources** dock, from top to bottom, by dragging them: `webcam`, `webcam-shadow`, `game-audio`, `game-screen`. The source at the top is drawn in front.
-15. Click the **lock** icon of `webcam` and of `webcam-shadow`, so a click in the preview can't move them.
+In a collection that still has the black shadow, remove it first: select `webcam-shadow` in the **Sources** dock, click the **lock** icon to unlock it, then the **trash** icon, and confirm with **Yes**.
+
+11. In the **Sources** dock, click **+**, then **Image**. **Create new**, name `webcam-glow-hardcore`, then **OK**. **Image File**: **Browse**, then `assets/webcam/webcam-glow-hardcore-wide.png` in the repository. Click **OK**.
+12. Right-click `webcam-glow-hardcore`, then **Transform → Edit Transform**: **Position** **X** `822`, **Y** `1091`; **Alignment**: **Top Left**; **Size**: **Width** `390`, **Height** `390`. Click **Close**.
+13. Do the same for `webcam-glow-softcore`, with `assets/webcam/webcam-glow-softcore-wide.png` and the same transform.
+14. Add four **Image** sources the same way, each with the file of its name in `assets/webcam/`: `webcam-badge-sc`, `webcam-badge-ssf-sc`, `webcam-badge-hc`, `webcam-badge-ssf-hc` (e.g. `webcam-badge-sc.png`). Transform of each: **Position** **X** `864`, **Y** `1327`; **Alignment**: **Top Left**; **Size**: **Width** `199`, **Height** `112`.
+15. Put the sources in this order in the **Sources** dock, from top to bottom, by dragging them: `webcam-badge-sc`, `webcam-badge-ssf-sc`, `webcam-badge-hc`, `webcam-badge-ssf-hc`, `webcam`, `webcam-glow-hardcore`, `webcam-glow-softcore`, `game-audio`, `game-screen`. The source at the top is drawn in front: the badges over the webcam, the glows behind it.
+16. Click the **eye** icon of every glow and badge but `webcam-glow-softcore` and `webcam-badge-sc`, to hide them: one glow and one badge show at a time (see [the table of the modes](#the-mode-played-glow-and-badge)).
+17. Click the **lock** icon of `webcam` and of the six images, so a click in the preview can't move them.
 
 ### The scene `pause`
 
-16. In the **Scenes** dock, click **+**, type `pause`, then **OK**.
-17. In the **Sources** dock, click **+**, then **Browser**. **Create new**, name `pause-screen`, then **OK**.
-18. In its properties:
+18. In the **Scenes** dock, click **+**, type `pause`, then **OK**.
+19. In the **Sources** dock, click **+**, then **Browser**. **Create new**, name `pause-screen`, then **OK**.
+20. In its properties:
     - **Local file**: checked;
     - **Local file** (the path): **Browse**, then `overlays/screens/pause.html` in the repository;
     - **Width** `2560`, **Height** `1440`;
@@ -133,22 +155,22 @@ Before starting: the game and Exile Market running on the left screen (`DP-2`), 
     - **Shutdown source when not visible**: checked;
     - **Refresh browser when scene becomes active**: checked;
     - leave **Custom CSS** as it is, and click **OK**.
-19. The preview shows « Petite pause » over the rain, on the whole canvas. Click the **lock** icon of `pause-screen`.
+21. The preview shows « Petite pause » over the rain, on the whole canvas. Click the **lock** icon of `pause-screen`.
 
 ### The scene `end`
 
-20. In the **Scenes** dock, click **+**, type `end`, then **OK**.
-21. Add a **Browser** source named `end-screen`, with the settings of step 18 and the file `overlays/screens/end.html`.
-22. The preview shows « Merci d’avoir regardé ! », the link and the disclaimer over the rain. Click the **lock** icon of `end-screen`.
+22. In the **Scenes** dock, click **+**, type `end`, then **OK**.
+23. Add a **Browser** source named `end-screen`, with the settings of step 20 and the file `overlays/screens/end.html`.
+24. The preview shows « Merci d’avoir regardé ! », the link and the disclaimer over the rain. Click the **lock** icon of `end-screen`.
 
 ### The order of the scenes
 
-23. In the **Scenes** dock, drag the scenes into this order: `game`, `pause`, `end`. Select `game`.
+25. In the **Scenes** dock, drag the scenes into this order: `game`, `pause`, `end`. Select `game`.
 
 ### The scene collection
 
-24. **Scene Collection → Rename**: type `sylent-exile`, then **OK**.
-25. **Scene Collection → Export**: open the folder `obs` of the repository, name the file `sylent-exile.json`, then **Save**.
+26. **Scene Collection → Rename**: type `sylent-exile`, then **OK**.
+27. **Scene Collection → Export**: open the folder `obs` of the repository, name the file `sylent-exile.json`, then **Save**.
 
 Claude Code then cleans the exported file (see [The export](#the-export)) before the commit.
 
@@ -157,7 +179,7 @@ Claude Code then cleans the exported file (see [The export](#the-export)) before
 The owner runs this check right after the procedure, with the game and Exile Market running.
 
 1. Look at the **Scenes** dock. Expected: exactly `game`, `pause` and `end`, in that order; the title bar of OBS ends with `Scenes: sylent-exile`.
-2. Select `game` and look at the preview. Expected: the webcam is a square with rounded corners, at the bottom, left of the character, with a dark shadow under it; the picture is sharp when the preview is enlarged (right-click the preview, **Preview Scaling → Canvas (2560x1440)**, then back to **Scale to Window**).
+2. Select `game` and look at the preview. Expected: the webcam is a square with rounded corners, at the bottom, left of the character, with a blue glow around it and « SC » at its bottom left; show `webcam-glow-hardcore` and `webcam-badge-ssf-hc` in place of the softcore ones: the glow turns red and the badge reads « SSF HC »; then back to softcore; the picture is sharp when the preview is enlarged (right-click the preview, **Preview Scaling → Canvas (2560x1440)**, then back to **Scale to Window**).
 3. In the game, open the stash and the inventory, put the pointer over an item of the inventory and press **Ctrl+D**. Expected: the webcam hides no cell of the stash or the inventory, nor the price window.
 4. Click `pause` and watch for thirty seconds. Expected: the game and the webcam disappear; the title and its subtitle show centered, « pause » in red, the subtitle in italics; the rain falls straight on the grid, and at least one lightning, white or red, lights up « PAUSE » behind the title; in the **Audio Mixer**, `game-audio` is gone and `microphone` still moves when you speak.
 5. Click `end`. Expected: « Merci d’avoir regardé ! » with « regardé ! » in red, « À très bientôt » in italics, the link in red just above the disclaimer at the bottom, both readable over the rain.
@@ -169,7 +191,7 @@ The owner runs this check right after the procedure, with the game and Exile Mar
 | Test | Result (OK / not OK) | Note |
 |---|---|---|
 | 1. Three scenes, collection renamed | | |
-| 2. Webcam: shape, place, sharpness | | |
+| 2. Webcam: shape, place, sharpness, glow and badge | | |
 | 3. Inventory and price not hidden | | |
 | 4. `pause` and its rain | | |
 | 5. `end` | | |
