@@ -16,4 +16,3 @@ Ideas that aren't part of a step of [`roadmap.md`](roadmap.md) yet. Read this fi
 | The hotkeys of OBS (scenes, mute) while the game has the focus: check in OBS's source whether they work under Wayland, and the « Wayland Hotkeys » plugin on Flathub if they don't. | The scenes (step 6); the live checklists (step 9). | 2026-11-15 |
 | A quiet music during the scene `pause`, licensed for live streams and VODs (Twitch mutes or strikes copyrighted music). | The scenes of step 6; a music source chosen and listed in `assets/NOTICE.md`. | 2026-11-15 |
 | Images for the Twitch panels (at most 320 × 600 px and 1 MB each), in the style of the scenes `pause` and `end`. | The panels as text (step 7); the style of `overlays/screens/`. | 2026-11-15 |
-| A `README.md` that presents the repository to the viewers who click the link of the panel « Setup »: what it holds, where to start to stream from Linux. | The panels (step 7). | 2026-11-15 |

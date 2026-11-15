@@ -54,7 +54,7 @@ Each panel has a title, an optional image, a link for the image, and a descripti
 
 To edit them, on the page of the channel, click **Éditer les panneaux** at the bottom left of the video player, fill a panel, click **Envoyer**, and **+** for the next one. Click **Éditer les panneaux** again to see the result, and check that the lists and the links render.
 
-Order: À propos, Exile Market, Règles du chat, Setup.
+Order: À propos, Exile Market, Règles du chat.
 
 ### À propos
 
@@ -120,27 +120,4 @@ Ici, on reste chill :
 3. Pas de pub ni de liens sans qu’on te les demande.
 4. Pas de politique ni de sujets qui fâchent.
 5. On parle français, mais l’anglais est bienvenu aussi.
-```
-
-### Setup
-
-The figures come from the inventory of [`docs/hardware.md`](../hardware.md) and the OBS setup of [`docs/obs-setup.md`](../obs-setup.md) and [`docs/obs-output.md`](../obs-output.md).
-
-Title:
-
-```text
-Setup
-```
-
-Description:
-
-```markdown
-Je streame sous Linux, et toute la config du stream est publique : [stream-hideout](https://github.com/sylent-dev/stream-hideout).
-
-- **PC :** AMD Ryzen 7 9700X, Radeon RX 9070 XT, 32 Go de RAM
-- **Système :** Bazzite (KDE Plasma, Wayland)
-- **Stream :** OBS Studio 33 (Flatpak), encodage matériel par la carte graphique
-- **Écrans :** 2 × iiyama 27 pouces en 2560 × 1440
-- **Webcam :** OBSBOT Meet 2
-- **Casque et micro :** HyperX Cloud III S Wireless
 ```
