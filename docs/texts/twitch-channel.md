@@ -139,3 +139,23 @@ Ici, on reste chill :
 4. Pas de politique ni de sujets qui fâchent.
 5. On parle français, mais l’anglais est bienvenu aussi.
 ```
+
+## Offline image and profile banner
+
+| Image | File | Size |
+|---|---|---|
+| Offline image (**Video Player Banner**) | [`assets/channel/offline-image.png`](../../assets/channel/offline-image.png) | 2560 × 1440 |
+| Profile banner (**Profile Banner**) | [`assets/channel/profile-banner.png`](../../assets/channel/profile-banner.png) | 2560 × 512 |
+
+Both are uploaded in the Creator Dashboard, **Settings → Channel → Brand**. What that page says, read on a screenshot of the owner on 2026-11-15 (Twitch's help center doesn't load for an automated reading):
+
+- **Video Player Banner**: « This is displayed on the player when your channel is offline », « Max 10mb GIF, JPG, or PNG ». A visitor who isn't logged in sees it in a small player, about 530 px wide, at the top of the channel page, beside Twitch's card « DÉCONNECTÉ(E) » (checked with a headless browser on 2026-11-15). The owner, logged in on their own channel, sees no player there, only the profile banner.
+- **Profile Banner**: « Customize your channel home background », with no size given. Twitch fills the header of the channel page with it and keeps only a thin band in the middle of its height: about 2320 × 188 px on a 2560 px wide screen (`inputs/empty-home.png`, not committed). A banner of 1200 × 480 lost its subtitle and half of its logo.
+
+Chosen by the owner on 2026-11-15 in the mock-up [`docs/mockups/channel-images.html`](../mockups/channel-images.html) (skill `html-mockups`, served with `python3 .claude/skills/html-mockups/assets/serve.py 8790`); their texts are in [`twitch-images.js`](twitch-images.js):
+
+- **Offline image**: proposal 8, the layout of the scene `end` over a still « Pluie de sang », without lightning and without the rings where the drops land: « Sylent est hors ligne » (« ligne » in red), « Il farme dans l’ombre… », and at the bottom the link of Exile Market with the Grinding Gear Games disclaimer, taken from [`overlays/screens/texts.js`](../../overlays/screens/texts.js). The size of the OBS canvas, as the owner asked. The link (64 px) and the disclaimer (44 px) are larger than on the scene `end` (26 and 24 px), so that they read in the player of 530 px; checked on the channel by the owner on 2026-11-15.
+- **Profile banner**: proposal 10, the SYLENT logo of the owner in white ([`assets/logos/sylent-wordmark.png`](../../assets/logos/sylent-wordmark.png)), 90 px high, with « Chill et craft » in italics on the same line, so that the channel isn't tied to one game; no emblem. Both sit in the band Twitch keeps; the rain around them may be cut. Checked on the channel by the owner on 2026-11-15: everything shows.
+- Set aside: the white and red lightning with a giant word (2, 3, 6), the name « SylentExile » in text (4 to 7), the Sylent emblem (5), the Exile Market showcase on the banner (7), and the banner of 1200 × 480 with the subtitle under the logo (9), which Twitch cut.
+
+To export them again after a change: open the page with `?only=8&offlineLink=64&offlineNote=44` (or `?only=10&bandLogo=90`) and take a screenshot with Playwright at the size of the image (`.claude/skills/html-mockups/scripts/screenshot.sh <url> <output.png> 2560 1440`, or `2560 512`).
