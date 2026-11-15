@@ -3,7 +3,7 @@
 How OBS Studio is set up for the channel, on Bazzite (KDE Plasma, Wayland) with the AMD Radeon RX 9070 XT described in [`hardware.md`](hardware.md). Read from the system and from OBS's own log on 2026-11-14.
 
 - Part 1, the installation and the hardware encoder: this page (step 3).
-- Part 2, the profile settings for Twitch: step 4.
+- Part 2, the profile settings for Twitch and the recording: [`obs-output.md`](obs-output.md) (step 4).
 - Part 3, the capture of the game, of Exile Market and of the sound: step 5.
 
 OBS runs in English here (the system language is `en_US`): the menu names below are OBS's English ones.
@@ -39,9 +39,9 @@ To read the version: **Help → About** in OBS, or `flatpak info com.obsproject.
 
 ### What is already in OBS
 
-OBS has been used before on this machine: it holds a profile « Untitled » and a scene collection « Untitled ». The profile was in output mode Simple with x264 at 6000 kbps; during the check of step 3 (2026-11-15), the owner applied the Advanced mode with **FFmpeg VAAPI H.264** on the RX 9070 XT. Its other output settings (bitrate, resolution, frame rate, keyframe interval) are left for step 4. A **profile** keeps the output settings (encoder, bitrate, resolution, the stream key); a **scene collection** keeps the scenes and their sources. Step 4 sets the profile for Twitch, and step 6 builds the scenes of the first live.
+OBS has been used before on this machine: it holds a profile « Untitled » and a scene collection « Untitled ». The profile was in output mode Simple with x264 at 6000 kbps; during the check of step 3 (2026-11-15), the owner applied the Advanced mode with **FFmpeg VAAPI H.264** on the RX 9070 XT. Its other output settings are set at step 4, in [`obs-output.md`](obs-output.md), where the profile was renamed `sylent`. A **profile** keeps the output settings (encoder, bitrate, resolution, the stream key); a **scene collection** keeps the scenes and their sources. Step 4 sets the profile for Twitch, and step 6 builds the scenes of the first live.
 
-The profile folder (`~/.var/app/com.obsproject.Studio/config/obs-studio/basic/profiles/`) holds the stream key in its `service.json`: it is never copied into this repository.
+The profile folder (`~/.var/app/com.obsproject.Studio/config/obs-studio/basic/profiles/`) holds the stream key in its `service.json`, and the tokens of a connected account in its `basic.ini`: it is never copied into this repository (see [`obs-output.md`](obs-output.md#secrets-in-the-profile)).
 
 ## Hardware encoder
 

@@ -10,3 +10,6 @@ Ideas that aren't part of a step of [`roadmap.md`](roadmap.md) yet. Read this fi
 | Overlays: a « Starting soon » scene, an Exile Market banner. | The first scenes (step 6). | 2026-11-14 |
 | Alerts for follows and subscriptions. | An alert service chosen; its widget URL in `.env`. | 2026-11-14 |
 | A webcam mask and a creative way to fit the owner's face into the layout (the owner has ideas to describe). | The first scenes (step 6), with a plain webcam in a corner. | 2026-11-14 |
+| Choose the video editing software, and check that it reads the recordings (AV1 and AAC in Hybrid MP4, step 4); the free version of DaVinci Resolve on Linux has limits on codecs to check in its documentation. | The first recordings. | 2026-11-15 |
+| The Twitch chat and stats panels inside OBS: OBS offers « Connect Account » for Twitch only outside Wayland; check whether running OBS through XWayland is worth it, without breaking the capture of step 5. | The capture chosen (step 5). | 2026-11-15 |
+| Twitch's Enhanced Broadcasting (several qualities encoded on the computer): check whether Twitch supports it on Linux with an AMD card. | The stream test (step 8). | 2026-11-15 |
