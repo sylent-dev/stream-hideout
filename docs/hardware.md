@@ -51,7 +51,7 @@ PipeWire handles the sound. The devices found by `pactl`:
 | Ryzen HD Audio Controller (motherboard) | jacks | nothing plugged in seen | digital (S/PDIF) |
 | Navi 48 HDMI/DP Audio (graphics card) | through the screens | none | the screens' sound |
 
-The headset microphone is the only microphone for now, and the one to use: it is close to the mouth and picks up less of the room and of the keyboard than the webcam's. The volume of 120 % amplifies the signal digitally: step 5 sets the level in OBS instead, and checks it does not clip (saturate). A dedicated microphone is a planned purchase, ranked at step 10.
+The headset microphone is the only microphone for now, and the one to use: it is close to the mouth and picks up less of the room and of the keyboard than the webcam's. The volume of 120 % amplifies the signal digitally: step 5 sets the level in OBS instead, and checks it does not clip (saturate). A dedicated microphone is a planned purchase, ranked at step 12.
 
 ## Webcam
 
