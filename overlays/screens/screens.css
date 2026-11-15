@@ -1,0 +1,164 @@
+/* The full-screen cards of the scenes « Pause » and « Fin », drawn at the size of the OBS canvas
+   (2560 × 1440), in the art direction of sylent.art and exile-market.sylent.tools. Chosen by the
+   owner on 2026-11-15 in docs/mockups/screens.html (rain 15 « Pluie de sang »); the decisions are
+   in docs/obs-scenes.md, Design. */
+
+@font-face {
+  font-family: "Manrope";
+  font-weight: 400;
+  font-display: block;
+  src: url("../../assets/fonts/manrope-regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Manrope";
+  font-weight: 600;
+  font-display: block;
+  src: url("../../assets/fonts/manrope-semibold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Manrope";
+  font-weight: 800;
+  font-display: block;
+  src: url("../../assets/fonts/manrope-extrabold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: italic;
+  font-weight: 300 700;
+  font-display: block;
+  src: url("../../assets/fonts/cormorant-garamond-italic.ttf") format("truetype");
+}
+
+:root {
+  --bg: #0a0a0a;
+  --text: #ffffff;
+  --weak: #a3a3a3;
+  --faint: #858585;
+  --signal: #e5383b;
+  --sky: radial-gradient(ellipse 120% 80% at 50% 0%, #170d0e 0%, #0a0a0a 60%);
+  --shade: #0a0a0ab3;
+  --shade-strong: #0a0a0ad9;
+  --font-title: "Manrope", sans-serif;
+  --font-text: "Manrope", sans-serif;
+  --font-subtitle: "Cormorant Garamond", serif;
+  --tracking-title: -0.045em;
+  --size-title: 150px;
+  --size-subtitle: 80px;
+  --size-link: 26px;
+  --size-note: 24px;
+}
+
+html,
+body {
+  margin: 0;
+  width: 2560px;
+  height: 1440px;
+  overflow: hidden;
+}
+
+/* OBS injects a transparent body background by default: the screen paints its own. */
+.ovl-screen {
+  position: relative;
+  width: 2560px;
+  height: 1440px;
+  overflow: hidden;
+  background: var(--sky);
+  color: var(--text);
+  font-family: var(--font-text);
+}
+
+.ovl-rain {
+  position: absolute;
+  inset: 0;
+  width: 2560px;
+  height: 1440px;
+}
+
+.ovl-content {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* A shade behind the texts, so that they read over the rain. */
+.ovl-content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 900px;
+  transform: translateY(-50%);
+  background: radial-gradient(ellipse 50% 45% at 50% 50%, var(--shade) 0%, transparent 100%);
+}
+
+.ovl-title {
+  margin: 0;
+  max-width: 2040px;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: var(--size-title);
+  letter-spacing: var(--tracking-title);
+  line-height: 0.98;
+  text-shadow: 0 0 40px #000;
+}
+
+.ovl-title .is-signal {
+  color: var(--signal);
+}
+
+/* The subtitle of exile-market.sylent.tools: Cormorant Garamond italic 500. */
+.ovl-subtitle {
+  margin: 36px 0 0;
+  font-family: var(--font-subtitle);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--size-subtitle);
+  color: var(--weak);
+  text-shadow: 0 0 30px #000;
+}
+
+/* « Fin »: the link of Exile Market just above the disclaimer that goes with it. */
+.ovl-footer {
+  position: absolute;
+  z-index: 2;
+  left: 260px;
+  right: 260px;
+  bottom: 56px;
+  text-align: center;
+  text-shadow: 0 0 12px #000;
+}
+
+.ovl-footer::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: 2200px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--shade-strong) 0%, transparent 100%);
+}
+
+.ovl-link {
+  margin: 0 0 10px;
+  font-weight: 600;
+  font-size: var(--size-link);
+  color: var(--signal);
+}
+
+.ovl-note {
+  margin: 0;
+  font-weight: 400;
+  font-size: var(--size-note);
+  color: var(--faint);
+}
