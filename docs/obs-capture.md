@@ -103,7 +103,7 @@ Before starting: the game installed, Exile Market in its folder, OBS closed.
 10. Double-click `game-screen`: its properties open.
 11. Click **Select Monitor**: KDE's window opens. Choose the left screen (`DP-2`, where the game is), then confirm.
 12. **Show Cursor**: checked. Click **OK**.
-13. Right-click `game-screen`, then **Transform → Fit to screen**: the game fills the preview, with no black border.
+13. Look at the preview: the game fills it, with no black border, since the screen and the canvas are both 2560 × 1440. Leave the **lock** icon of `game-screen` closed, so it can't be moved by mistake. Only if a border shows: click the lock to open it, right-click `game-screen`, **Transform → Fit to screen** (greyed while the source is locked), then close the lock again.
 
 ### The sound of the game
 
@@ -116,7 +116,7 @@ Before starting: the game installed, Exile Market in its folder, OBS closed.
 17. **Edit → Advanced Audio Properties**.
 18. On the line `microphone`, column **Tracks**: **1** and **2** checked, **3** to **6** unchecked.
 19. On the line `game-audio`: **1** and **3** checked, **2**, **4**, **5** and **6** unchecked.
-20. If another line has a track checked (`obsbot`, the webcam): uncheck them all. Click **Close**.
+20. If another line has a track checked (`webcam`): uncheck them all. Click **Close**.
 
 ### The filters of the microphone
 
