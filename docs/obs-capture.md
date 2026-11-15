@@ -38,7 +38,7 @@ Screen Capture is the only method that shows the price window, so it is the one 
 
 - OBS, the chat and the browser stay on the right screen (`DP-3`);
 - KDE turns on **Do Not Disturb** by itself while the screen is shared, so no notification pops up: `WhenScreenSharing` is on by default in Plasma 6.8.2 ([`donotdisturbsettings.kcfg`](https://github.com/KDE/plasma-workspace/blob/v6.8.2/libnotificationmanager/kcfg/donotdisturbsettings.kcfg)), and wasn't changed on this machine (no such line in `~/.config/plasmanotifyrc`). The check below confirms that a capture by OBS counts as a screen sharing;
-- the scene « Pause » of step 6 hides the screen when the owner leaves the game.
+- the scene `pause` of step 6 hides the screen when the owner leaves the game.
 
 **Show Cursor** is checked (its default, [`screencast-portal.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/linux-pipewire/screencast-portal.c)): the viewers see the pointer go over the item before Ctrl+D, which explains the price that shows.
 
