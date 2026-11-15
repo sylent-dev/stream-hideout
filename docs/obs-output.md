@@ -42,11 +42,11 @@ A B-frame is a picture built from the one before and the one after it: it saves 
 The recordings are kept to make videos and clips later (see [`backlog.md`](../backlog.md)), so they are made by a second encoder, at the full size of the canvas and in a better quality than the stream:
 
 - **AV1**: the codec of the RX 9070 XT that gives the smallest files for the same quality. The editing software isn't chosen yet: Kdenlive reads AV1; the free version of DaVinci Resolve is checked when the editor is chosen (backlog).
-- **CQP** (constant quality): the encoder keeps the same quality and uses as much data as the picture needs, which suits a file but not a live stream. QP 20 is OBS's default; for AV1, OBS multiplies it by 5 on the encoder's scale ([`obs-ffmpeg-vaapi.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/obs-ffmpeg/obs-ffmpeg-vaapi.c)). The size per hour depends on the game: the check below measures it.
+- **CQP** (constant quality): the encoder keeps the same quality and uses as much data as the picture needs, which suits a file but not a live stream. QP 20 is OBS's default; for AV1, OBS multiplies it by 5 on the encoder's scale ([`obs-ffmpeg-vaapi.c`](https://github.com/obsproject/obs-studio/blob/33.0.1/plugins/obs-ffmpeg/obs-ffmpeg-vaapi.c)). The size per hour depends on the game: the check of 2026-11-15 measured 18.7 Mbit/s on 49 seconds of Path of Exile 2 (`ffprobe`), about **8.4 GB per hour**.
 - **Hybrid MP4**: an MP4 file that stays readable if OBS or the computer stops in the middle of a recording, unlike a plain MP4.
 - **Three sound tracks**: track 1 holds the whole mix (what the stream sends), track 2 the microphone alone, track 3 the game alone, so a video can lower the game under the voice. Which source goes to which track is set at step 5.
 
-The recordings go to `/var/home`, where 165 GB were free on 2026-11-15: delete or move the old ones as they pile up.
+The recordings go to `/var/home`, where 165 GB were free on 2026-11-15, about 19 hours of recording: delete or move the old ones as they pile up.
 
 ### The sound encoder
 
@@ -133,7 +133,7 @@ The owner runs this check after the procedure, with Path of Exile 2 running. The
 2. **File → Settings → Video**: canvas and output in 2560 × 1440, 60 FPS.
 3. In a scene that shows the game (step 5 adds the real capture; until then, any scene with a source), click **Start Recording**, play two minutes in a fight, then click **Stop Recording**. Expected: an `.mp4` file in `~/Videos/Streaming`.
 4. Open that file with the video player of the system. Expected: the picture is sharp, in 2560 × 1440, and the sound plays.
-5. Note the size of the file: multiplied by 30, it gives the size of one hour of recording.
+5. Note the size of the file and its length (in its properties, or in the player): the size divided by the minutes, multiplied by 60, gives the size of one hour of recording.
 6. **Help → Log Files → View Current Log**, then find `[FFmpeg VAAPI encoder: 'advanced_video_recording'] settings:`. Expected, in the lines under it: `device: /dev/dri/by-path/pci-0000:03:00.0-render`, `rate_control: CQP`, `qp: 20`, `keyint: 120`, `width: 2560`, `height: 1440`.
 7. Free test: anything else worth looking at in these settings, in the file or in the log.
 
