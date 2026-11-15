@@ -16,7 +16,7 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 
 ## First live
 
-- [ ] **5. `docs/obs-capture`**: the capture under Wayland: the game in windowed fullscreen and the Exile Market window (XWayland) both on screen, the method to compare (PipeWire screen capture, window capture); the audio sources (game, microphone, other sounds) kept separate, on the recording tracks of step 4 (1: the whole mix, 2: the microphone, 3: the game).
+- [ ] **5. `docs/obs-capture`**: the capture under Wayland: the game in windowed fullscreen and the Exile Market window (XWayland) both on screen, the method to compare (PipeWire screen capture, window capture); the audio sources (game, microphone, other sounds) kept separate, on the recording tracks of step 4 (1: the whole mix, 2: the microphone, 3: the game). The microphone sounds poor to the owner (recording of 2026-11-15, whose mix reached 0 dBFS): its level without clipping, and the filters of OBS that fit it.
 - [ ] **6. `feat/first-scenes`**: the scenes of the first live (« Jeu », « Pause », « Fin »), with the webcam in a corner of « Jeu », their texts in `docs/texts/`, and the scene collection exported in `obs/`, without absolute paths.
 - [ ] **7. `content/twitch-channel`**: in `docs/texts/`, the stream title, category and tags, the bio and the panels, including an Exile Market panel with its link and the Grinding Gear Games disclaimer.
 - [ ] **8. `docs/stream-test`**: the guide of the stream test, with a blank table of results; its results fix the settings of steps 4 to 6 if needed.
