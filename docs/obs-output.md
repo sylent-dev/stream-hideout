@@ -12,7 +12,7 @@ The profile settings of OBS for Twitch and for the local recording: part 2 of th
 | Keyframe interval | 2 s | 2 s |
 | Max B-frames | 2 | 0 |
 | Sound | AAC, 160 kbps, stereo, 48 kHz, track 1 | AAC, 160 kbps per track, tracks 1, 2 and 3 |
-| File | none | Hybrid MP4, in `~/Videos` |
+| File | none | Hybrid MP4, in `~/Videos/Streaming` |
 
 ## Why these values
 
@@ -111,7 +111,7 @@ OBS open, not streaming nor recording: OBS doesn't change the video settings whi
 
 11. Tab **Recording**:
     - **Type**: **Standard**;
-    - **Recording Path**: the `Videos` folder of the home folder (**Browse**);
+    - **Recording Path**: the `Videos/Streaming` folder of the home folder (**Browse**; the owner created `Streaming` on 2026-11-15);
     - **Recording Format**: **Hybrid MP4 (.mp4)**;
     - **Audio Track**: `1`, `2` and `3` checked;
     - **Video Encoder**: **FFmpeg VAAPI AV1**;
@@ -131,7 +131,7 @@ The owner runs this check after the procedure, with Path of Exile 2 running. The
 
 1. **File → Settings → Output**: the values of steps 9 to 13 are still there after closing and opening the window again.
 2. **File → Settings → Video**: canvas and output in 2560 × 1440, 60 FPS.
-3. In a scene that shows the game (step 5 adds the real capture; until then, any scene with a source), click **Start Recording**, play two minutes in a fight, then click **Stop Recording**. Expected: an `.mp4` file in `~/Videos`.
+3. In a scene that shows the game (step 5 adds the real capture; until then, any scene with a source), click **Start Recording**, play two minutes in a fight, then click **Stop Recording**. Expected: an `.mp4` file in `~/Videos/Streaming`.
 4. Open that file with the video player of the system. Expected: the picture is sharp, in 2560 × 1440, and the sound plays.
 5. Note the size of the file: multiplied by 30, it gives the size of one hour of recording.
 6. **Help → Log Files → View Current Log**, then find `[FFmpeg VAAPI encoder: 'advanced_video_recording'] settings:`. Expected, in the lines under it: `device: /dev/dri/by-path/pci-0000:03:00.0-render`, `rate_control: CQP`, `qp: 20`, `keyint: 120`, `width: 2560`, `height: 1440`.
