@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mock-up: Twitch channel images</title>
+<!--
+  The offline image (what the video player shows when the channel isn't live) and the profile
+  banner of the Twitch channel (html-mockups skill), in the art direction of the scenes « Pause »
+  and « Fin » (overlays/screens/): the black, the red of Exile Market, Manrope and Cormorant
+  Garamond, a still « Pluie de sang » over a floor in perspective.
+
+  The offline image is drawn at the size of the OBS canvas (2560 × 1440), as the owner asked on
+  2026-11-15; the banner at 1200 × 480, to be checked against the size Twitch's settings page asks
+  for. The rain is drawn from a seed per proposal, so that an image stays the same from one reload
+  to the next. "?only=<number>" shows one image alone at its real size, for the export.
+
+  Serve the repository root, then open http://127.0.0.1:8790/docs/mockups/channel-images.html :
+    python3 .claude/skills/html-mockups/assets/serve.py 8790
+-->
+<style>
+  @font-face { font-family: "Manrope"; font-weight: 400; font-display: block; src: url("../../assets/fonts/manrope-regular.ttf") format("truetype"); }
+  @font-face { font-family: "Manrope"; font-weight: 600; font-display: block; src: url("../../assets/fonts/manrope-semibold.ttf") format("truetype"); }
+  @font-face { font-family: "Manrope"; font-weight: 800; font-display: block; src: url("../../assets/fonts/manrope-extrabold.ttf") format("truetype"); }
+  @font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 300 700; font-display: block; src: url("../../assets/fonts/cormorant-garamond-italic.ttf") format("truetype"); }
+
+  /* The page around the frames. */
+  body { margin: 0; background: #2a2d31; color: #e9ecef; font: 14px/1.4 system-ui, sans-serif; }
+  .page-tabs { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 16px; background: #1b1d20; border-bottom: 1px solid #3a3f45; }
+  .page-tabs .group { display: flex; align-items: center; gap: 4px; }
+  .page-tabs .group > span { margin-right: 4px; color: #adb5bd; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .page-tabs input[type="range"] { width: 120px; accent-color: #e9ecef; }
+  .page-tabs output { min-width: 4ch; color: #dee2e6; font-variant-numeric: tabular-nums; }
+  .page-tabs select { padding: 3px 4px; border: 1px solid #3a3f45; border-radius: 4px; background: #24272b; color: #dee2e6; font: inherit; cursor: pointer; }
+  .page-header { padding: 18px 16px 0; }
+  .page-header h1 { margin: 0 0 4px; font-size: 20px; }
+  .page-header p { margin: 0; max-width: 900px; color: #adb5bd; }
+  .page-section { padding: 8px 16px 24px; }
+  .page-section h2 { font-size: 15px; color: #adb5bd; font-weight: 600; }
+  .page-row { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  .page-slot > span { display: block; margin-bottom: 6px; color: #adb5bd; font-size: 12px; max-width: 900px; }
+  .page-slot > span b { color: #fff; }
+  .page-twitch { padding: 10px; background: #0e0e10; }
+  .page-tabs[hidden] { display: none; }
+  .page-warning { margin: 0; padding: 10px 16px; background: #8a6a10; color: #fff; }
+  body.is-only { background: #0a0a0a; }
+  body.is-only .page-twitch { padding: 0; }
+
+  /* Tokens of overlays/screens/screens.css. */
+  :root {
+    --bg: #0a0a0a; --text: #ffffff; --weak: #a3a3a3; --faint: #858585; --signal: #e5383b;
+    --sky: radial-gradient(ellipse 120% 80% at 50% 0%, #170d0e 0%, #0a0a0a 60%);
+    --shade: #0a0a0ab3; --shade-strong: #0a0a0ad9;
+    --font-title: "Manrope", sans-serif; --font-text: "Manrope", sans-serif; --font-subtitle: "Cormorant Garamond", serif;
+    --tracking-title: -0.045em;
+  }
+
+  /* An image, drawn at its real size, then scaled by the "View" list. */
+  .img-frame { position: relative; overflow: hidden; background: var(--sky); color: var(--text); font-family: var(--font-text); }
+  .img-rain { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .img-title { margin: 0; font-family: var(--font-title); font-weight: 800; letter-spacing: var(--tracking-title); line-height: .98; white-space: nowrap; text-shadow: 0 0 40px #000; }
+  .img-title .is-signal { color: var(--signal); }
+  .img-subtitle { margin: 0; font-family: var(--font-subtitle); font-style: italic; font-weight: 500; color: var(--weak); text-shadow: 0 0 30px #000; }
+  .img-link { margin: 0; font-weight: 600; color: var(--signal); }
+  .img-note { margin: 0; font-weight: 400; color: var(--faint); }
+
+  /* The offline image: the layout of the scene « Fin ». */
+  .img-offline .img-content { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+  .img-offline .img-content::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 50%; height: 900px; transform: translateY(-50%); background: radial-gradient(ellipse 50% 45% at 50% 50%, var(--shade) 0%, transparent 100%); }
+  .img-offline .img-title { font-size: 150px; }
+  .img-offline .img-subtitle { margin-top: 36px; font-size: 80px; }
+  .img-offline .img-footer { position: absolute; z-index: 2; left: 260px; right: 260px; bottom: 56px; text-align: center; text-shadow: 0 0 12px #000; }
+  .img-offline .img-footer::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 2200px; height: 260px; transform: translate(-50%, -50%); background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--shade-strong) 0%, transparent 100%); }
+  .img-offline .img-link { margin-bottom: 10px; font-size: 26px; }
+  .img-offline .img-note { font-size: 24px; }
+
+  /* The banners. */
+  .img-banner .img-layer { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; }
+  .img-banner .img-center { flex-direction: column; justify-content: center; text-align: center; }
+  .img-banner .img-center::before { content: ""; position: absolute; z-index: -1; inset: 0; background: radial-gradient(ellipse 42% 42% at 50% 50%, var(--shade) 0%, transparent 100%); }
+  .img-banner .img-title { font-size: var(--banner-title); }
+  .img-banner .img-subtitle { margin-top: 12px; font-size: calc(var(--banner-title) * .4); }
+  .img-banner .img-wordmark { height: var(--banner-title); aspect-ratio: 1665 / 383; background: #fff; -webkit-mask: url("../../assets/logos/sylent-wordmark.png") center / contain no-repeat; mask: url("../../assets/logos/sylent-wordmark.png") center / contain no-repeat; filter: drop-shadow(0 0 30px #000); }
+  .img-banner .img-wordmark + .img-subtitle { margin-top: calc(var(--banner-title) * .3); }
+  .img-banner .img-side { gap: 36px; justify-content: center; }
+  .img-banner .img-side .img-words { text-align: left; }
+  .img-banner .img-logo { flex: none; background: var(--logo-color, #fff); -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; filter: drop-shadow(0 0 14px #000); }
+  .img-banner .img-logo.is-sylent { --logo: url("../../assets/logos/sylent-emblem.png"); width: 190px; height: 190px; }
+  .img-banner .img-logo.is-exile-market { --logo: url("../../assets/logos/exile-market-emblem.svg"); --logo-color: var(--signal); width: 96px; height: 96px; filter: drop-shadow(0 0 8px #e5383bcc); }
+  .img-banner .img-showcase { justify-content: space-between; padding: 0 90px; }
+  .img-banner .img-showcase::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, var(--shade) 0%, transparent 45%, transparent 55%, var(--shade) 100%); }
+  .img-banner .img-market { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 340px; text-align: center; }
+  .img-banner .img-market .img-link { font-size: 20px; }
+  .img-banner .img-market .img-note { font-size: 12px; line-height: 1.35; }
+</style>
+</head>
+<body>
+<p class="page-warning" id="file-warning" hidden>Opened as a file: serve the repository root (see the comment at the top of this page) so that the fonts, the logos and the texts load.</p>
+<nav class="page-tabs" id="tabs" aria-label="Variants"></nav>
+<main id="sheet"></main>
+<script src="../../overlays/screens/texts.js"></script>
+<script src="../texts/twitch-images.js"></script>
+<script>
+  // The width each image is shown at, per view: its real size, about the width of Twitch's player
+  // (or banner) on a computer, and on a phone.
+  const VIEWS = {
+    real: { label: "Real size", offline: 2560, banner: 1200 },
+    computer: { label: "Computer", offline: 1280, banner: 1200 },
+    phone: { label: "Phone", offline: 400, banner: 400 },
+  };
+  const VARIANTS = {
+    view: { label: "View", select: true, options: Object.fromEntries(Object.entries(VIEWS).map(([key, view]) => [key, view.label])), fallback: "computer" },
+    density: { label: "Rain density", range: { min: 0, max: 2, step: 0.1 }, unit: "×", fallback: "1" },
+    red: { label: "Red drops", range: { min: 0, max: 0.5, step: 0.05 }, fallback: "0.15" },
+    grid: { label: "Floor", range: { min: 0, max: 1, step: 0.05 }, fallback: "0.3" },
+    bannerTitle: { label: "Banner title", range: { min: 60, max: 150, step: 2 }, variable: "--banner-title", unit: "px", fallback: "110" },
+  };
+
+  const params = new URLSearchParams(location.search);
+  const accepts = (variant, value) => variant.range
+    ? value !== null && Number(value) >= variant.range.min && Number(value) <= variant.range.max
+    : value in variant.options;
+  const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
+    [key, accepts(variant, params.get(key)) ? params.get(key) : variant.fallback]));
+  const only = params.get("only");
+
+  const T = window.CHANNEL_IMAGE_TEXTS;
+  const END = window.TEXTS.end;
+  // The last word of a title in red; « SylentExile » is cut before « Exile ».
+  const titleHtml = text => {
+    if (text === T.banner.name) return `Sylent<span class="is-signal">Exile</span>`;
+    const cut = text.lastIndexOf(" ") + 1;
+    return `${text.slice(0, cut)}<span class="is-signal">${text.slice(cut)}</span>`;
+  };
+
+  // The offline image: the layout of « Fin », its texts, and the link of Exile Market at the bottom.
+  const offline = `
+    <div class="img-content"><h1 class="img-title">${titleHtml(T.offline.title)}</h1><p class="img-subtitle">${T.offline.subtitle}</p></div>
+    <div class="img-footer"><p class="img-link">${END.link}</p><p class="img-note">${END.disclaimer}</p></div>`;
+  const words = (title, subtitle) => `<div class="img-words"><h1 class="img-title">${titleHtml(title)}</h1><p class="img-subtitle">${subtitle}</p></div>`;
+
+  // Every proposal, numbered once across the page. lightning: null, "white" or "red"; ghost: the giant word it reveals.
+  const SECTIONS = [
+    ["Chosen (2026-11-15): 1 without the rings, and 4 with the SYLENT logo and « Chill et craft »", [
+      { number: 8, name: "Pluie calme · sans cercles", text: "Proposal 1 without the rings where the drops land; the small splashes stay.", kind: "offline", html: offline, lightning: null, rings: false },
+      { number: 9, name: "Sobre · logo SYLENT", text: "The SYLENT logo in white, centered, « Chill et craft » in italics under it; no emblem.", kind: "banner", html: `<div class="img-layer img-center"><div class="img-wordmark" role="img" aria-label="Sylent"></div><p class="img-subtitle">${T.banner.tagline}</p></div>`, lightning: null },
+    ]],
+    ["Set aside: offline image, 2560 × 1440, the layout of « Fin », « Sylent est hors ligne »", [
+      { number: 1, name: "Pluie calme", text: "No lightning: the rain alone, the most restful.", kind: "offline", html: offline, lightning: null },
+      { number: 2, name: "Éclair blanc · OMBRE", text: "A white lightning on the right lights up « OMBRE » behind the title, as on « Pause ».", kind: "offline", html: offline, lightning: "white", ghost: T.offline.ghosts.shadow },
+      { number: 3, name: "Éclair rouge · HORS LIGNE", text: "A red lightning lights up « HORS LIGNE » behind the title.", kind: "offline", html: offline, lightning: "red", ghost: T.offline.ghosts.offline },
+    ]],
+    ["Set aside: profile banner, 1200 × 480, normal temperature", [
+      { number: 4, name: "Sobre", text: "The name centered, « Exile » in red, the game in italics under it.", kind: "banner", html: `<div class="img-layer img-center">${words(T.banner.name, T.banner.game)}</div>`, lightning: null },
+      { number: 5, name: "Emblème", text: "The Sylent emblem in white on the left of the name and of the mood of the channel.", kind: "banner", html: `<div class="img-layer img-side"><div class="img-logo is-sylent"></div>${words(T.banner.name, T.banner.mood)}</div>`, lightning: null },
+    ]],
+    ["Set aside: profile banner, hotter", [
+      { number: 6, name: "Foudre", text: "A red lightning on the right lights up a giant « EXILE » behind the name.", kind: "banner", html: `<div class="img-layer img-center">${words(T.banner.name, T.banner.game)}</div>`, lightning: "red", ghost: T.banner.ghost },
+      { number: 7, name: "Vitrine Exile Market", text: "The name on the left; on the right, the red emblem of Exile Market, its link and the disclaimer it needs.", kind: "banner", html: `<div class="img-layer img-showcase">${words(T.banner.name, T.banner.game)}<div class="img-market"><div class="img-logo is-exile-market"></div><p class="img-link">${END.link}</p><p class="img-note">${END.disclaimer}</p></div></div>`, lightning: null },
+    ]],
+  ];
+  const SIZES = { offline: [2560, 1440], banner: [1200, 480] };
+
+  // A small seeded random, so that each rain is the same at every reload.
+  function seeded(seed) {
+    let state = seed * 2654435761 >>> 0;
+    return () => {
+      state = (state + 0x6d2b79f5) >>> 0;
+      let value = Math.imul(state ^ (state >>> 15), 1 | state);
+      value = (value + Math.imul(value ^ (value >>> 7), 61 | value)) ^ value;
+      return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // One still moment of overlays/screens/rain.js, at the scale of the image (s = 1 on the OBS canvas).
+  function drawStill(canvas, proposal, ratio) {
+    const [W, H] = SIZES[proposal.kind];
+    const s = H / 1440;
+    canvas.width = W * ratio;
+    canvas.height = H * ratio;
+    const context = canvas.getContext("2d");
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const random = seeded(proposal.number * 7 + 3);
+    const between = (low, high) => low + random() * (high - low);
+    const RED = "229, 56, 59";
+    const WHITE = "210, 218, 228";
+    const HORIZON = H * (900 / 1440);
+    const color = proposal.lightning === "red" ? RED : "255, 255, 255";
+    const light = proposal.lightning ? 0.85 : 0;
+
+    // The flash, the giant word and the bolt, behind the rain.
+    if (light) {
+      // A still image keeps the flash low (rain.js lights the whole screen for an instant): a faint
+      // light over the whole image, stronger around the bolt.
+      context.fillStyle = `rgba(${color}, ${light * 0.06})`;
+      context.fillRect(0, 0, W, H);
+      const glow = context.createRadialGradient(W * 0.84, 0, 0, W * 0.84, 0, W * 0.7);
+      glow.addColorStop(0, `rgba(${color}, ${light * 0.3})`);
+      glow.addColorStop(1, `rgba(${color}, 0)`);
+      context.fillStyle = glow;
+      context.fillRect(0, 0, W, H);
+      if (proposal.ghost) {
+        let size = 760 * s;
+        context.font = `800 ${size}px Manrope`;
+        const width = context.measureText(proposal.ghost).width;
+        if (width > W * 0.94) size *= (W * 0.94) / width;
+        context.font = `800 ${size}px Manrope`;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillStyle = `rgba(255, 255, 255, ${light * 0.1})`;
+        context.fillText(proposal.ghost, W / 2, HORIZON - 380 * s);
+      }
+      // A bolt on the right, away from the texts, with a few branches.
+      const points = [[W * 0.84, -20 * s]];
+      while (points.at(-1)[1] < HORIZON) {
+        const [x, y] = points.at(-1);
+        points.push([x + (random() - 0.5) * 160 * s, y + (40 + random() * 90) * s]);
+      }
+      const branches = Array.from({ length: 3 }, () => {
+        const branch = [points[2 + Math.floor(random() * Math.max(1, points.length - 3))]];
+        for (let step = 0; step < 5; step += 1) branch.push([branch.at(-1)[0] + (random() - 0.4) * 140 * s, branch.at(-1)[1] + (30 + random() * 60) * s]);
+        return branch;
+      });
+      context.save();
+      context.strokeStyle = `rgba(${color}, ${light})`;
+      context.shadowColor = `rgba(${color}, 1)`;
+      context.shadowBlur = 30 * s;
+      [points, ...branches].forEach((line, index) => {
+        context.lineWidth = (index === 0 ? 5 : 2) * Math.max(s, 0.5);
+        context.beginPath();
+        line.forEach(([x, y], point) => (point ? context.lineTo(x, y) : context.moveTo(x, y)));
+        context.stroke();
+      });
+      context.restore();
+    }
+
+    // The floor: a grid in perspective, its lines running to the center of the horizon.
+    const grid = Number(chosen.grid);
+    if (grid > 0) {
+      const fade = context.createLinearGradient(0, HORIZON, 0, H);
+      fade.addColorStop(0, "rgba(255, 255, 255, 0)");
+      fade.addColorStop(0.3, `rgba(255, 255, 255, ${(0.12 + light * 0.25) * grid})`);
+      fade.addColorStop(1, `rgba(255, 255, 255, ${(0.24 + light * 0.3) * grid})`);
+      context.strokeStyle = fade;
+      context.lineWidth = Math.max(2 * s, 0.75);
+      context.beginPath();
+      for (let column = -40; column <= 40; column += 1) {
+        context.moveTo(W / 2, HORIZON);
+        context.lineTo(W / 2 + column * 180 * 2.2 * s, H + (H - HORIZON) * 1.2);
+      }
+      for (let line = 0; line < 60; line += 1) {
+        const y = HORIZON + (H - HORIZON) / (0.8 + line * 0.5);
+        if (y > H + 4) continue;
+        context.moveTo(0, y);
+        context.lineTo(W, y);
+      }
+      context.stroke();
+      const horizon = context.createLinearGradient(0, 0, W, 0);
+      horizon.addColorStop(0, "rgba(229, 56, 59, 0)");
+      horizon.addColorStop(0.5, `rgba(229, 56, 59, ${0.35 + light * 0.5})`);
+      horizon.addColorStop(1, "rgba(229, 56, 59, 0)");
+      context.fillStyle = horizon;
+      context.fillRect(0, HORIZON - Math.max(s, 0.5), W, Math.max(2 * s, 1));
+    }
+
+    // The drops, the rings and the splashes where they land: far ones near the horizon, near ones at the bottom.
+    const count = Math.round(1700 * Number(chosen.density) * (W * H) / (2560 * 1440));
+    const brighten = 1 + light * 1.5;
+    context.lineCap = "round";
+    for (let index = 0; index < count; index += 1) {
+      const depth = 0.35 + random() * 0.65;
+      const ground = HORIZON + (H - HORIZON) * Math.pow((depth - 0.35) / 0.65, 1.6) + random() * 30 * s;
+      const red = random() < Number(chosen.red);
+      const alpha = between(0.12, 0.46) * (0.5 + depth * 0.5);
+      const x = random() * W;
+      const length = between(40, 76) * depth * s;
+      const y = random() * (ground + length);
+      const tint = red ? RED : WHITE;
+      if (y - length < ground) {
+        context.strokeStyle = `rgba(${tint}, ${Math.min(1, alpha * brighten * (red ? 1.6 : 1))})`;
+        context.lineWidth = Math.max(between(1.2, 2.4) * depth * s, 0.6);
+        context.beginPath();
+        context.moveTo(x, Math.min(y, ground));
+        context.lineTo(x, y - length);
+        context.stroke();
+      }
+      const landing = random();
+      if (landing < 0.12 && proposal.rings !== false) {
+        const size = (10 + 50 * depth) * s * between(0.3, 1);
+        context.strokeStyle = `rgba(${tint}, ${Math.min(1, alpha * 1.8) * between(0.2, 0.8)})`;
+        context.lineWidth = Math.max(1.5 * s, 0.5);
+        context.beginPath();
+        context.ellipse(x, ground, size, size * 0.22, 0, 0, Math.PI * 2);
+        context.stroke();
+      } else if (landing < 0.18 && depth > 0.55) {
+        context.fillStyle = `rgba(${tint}, ${Math.min(1, alpha * 2) * 0.6})`;
+        for (let piece = 0; piece < 2; piece += 1) {
+          context.fillRect(x + (random() - 0.5) * 40 * s * depth, ground - random() * 30 * s * depth, Math.max(3 * s, 1), Math.max(3 * s, 1));
+        }
+      }
+    }
+  }
+
+  const proposals = SECTIONS.flatMap(([, slots]) => slots);
+  function drawAll() {
+    const ratio = Math.max(1, window.devicePixelRatio || 1);
+    for (const canvas of document.querySelectorAll(".img-rain")) {
+      drawStill(canvas, proposals.find(proposal => proposal.number === Number(canvas.dataset.number)), only ? 1 : ratio);
+    }
+  }
+  const frameHtml = (proposal, zoom) => {
+    const [W, H] = SIZES[proposal.kind];
+    return `<div class="page-twitch"><div class="img-frame img-${proposal.kind}" data-number="${proposal.number}" style="width:${W}px;height:${H}px;zoom:${zoom}"><canvas class="img-rain" data-number="${proposal.number}"></canvas>${proposal.html}</div></div>`;
+  };
+
+  function applyVariables() {
+    for (const [key, variant] of Object.entries(VARIANTS)) {
+      if (variant.variable) document.documentElement.style.setProperty(variant.variable, chosen[key] + (variant.unit === "px" ? "px" : ""));
+    }
+  }
+  const keepInAddress = () => history.replaceState(null, "", "?" + new URLSearchParams(only ? { ...chosen, only } : chosen));
+
+  function render() {
+    applyVariables();
+    if (only) {
+      document.body.classList.add("is-only");
+      document.getElementById("tabs").hidden = true;
+      document.getElementById("sheet").innerHTML = frameHtml(proposals.find(proposal => proposal.number === Number(only)), 1);
+      drawAll();
+      return;
+    }
+    document.getElementById("tabs").innerHTML = Object.entries(VARIANTS).map(([key, variant]) => variant.range
+      ? `<label class="group"><span>${variant.label}</span><input type="range" data-variant="${key}" min="${variant.range.min}" max="${variant.range.max}" step="${variant.range.step}" value="${chosen[key]}"><output>${chosen[key]}${variant.unit ?? ""}</output></label>`
+      : `<label class="group"><span>${variant.label}</span><select data-variant="${key}">${Object.entries(variant.options).map(([value, label]) =>
+        `<option value="${value}" ${chosen[key] === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>`).join("");
+    const view = VIEWS[chosen.view];
+    document.getElementById("sheet").innerHTML = `
+      <header class="page-header"><h1>Twitch channel images</h1><p>The offline image and the profile banner, over the dark page of a Twitch channel. Proposals are numbered once across the page: give their number. The sliders apply to every image, so that they match.</p></header>
+      ${SECTIONS.map(([title, slots]) => `<section class="page-section"><h2>${title}</h2><div class="page-row">${
+        slots.map(proposal => `<div class="page-slot"><span><b>${proposal.number} · ${proposal.name}</b> — ${proposal.text}</span>${frameHtml(proposal, view[proposal.kind] / SIZES[proposal.kind][0])}</div>`).join("")}</div></section>`).join("")}`;
+    drawAll();
+  }
+
+  document.getElementById("tabs").addEventListener("input", event => {
+    const { variant } = event.target.dataset;
+    if (!variant) return;
+    chosen[variant] = event.target.value;
+    keepInAddress();
+    if (VARIANTS[variant].range) {
+      event.target.nextElementSibling.value = chosen[variant] + (VARIANTS[variant].unit ?? "");
+      applyVariables();
+      drawAll();
+    } else {
+      render();
+    }
+  });
+  document.getElementById("file-warning").hidden = location.protocol !== "file:";
+  Promise.all([document.fonts.load("800 100px Manrope"), document.fonts.load("italic 500 40px 'Cormorant Garamond'")]).finally(render);
+</script>
+</body>
+</html>

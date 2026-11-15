@@ -139,3 +139,18 @@ Ici, on reste chill :
 4. Pas de politique ni de sujets qui fâchent.
 5. On parle français, mais l’anglais est bienvenu aussi.
 ```
+
+## Offline image and profile banner
+
+| Image | File | Size |
+|---|---|---|
+| Offline image (what the video player shows when the channel isn't live) | [`assets/channel/offline-image.png`](../../assets/channel/offline-image.png) | 2560 × 1440 |
+| Profile banner | [`assets/channel/profile-banner.png`](../../assets/channel/profile-banner.png) | 1200 × 480 |
+
+Chosen by the owner on 2026-11-15 in the mock-up [`docs/mockups/channel-images.html`](../mockups/channel-images.html) (skill `html-mockups`, served with `python3 .claude/skills/html-mockups/assets/serve.py 8790`); their texts are in [`twitch-images.js`](twitch-images.js):
+
+- **Offline image**: proposal 8, the layout of the scene `end` over a still « Pluie de sang », without lightning and without the rings where the drops land: « Sylent est hors ligne » (« ligne » in red), « Il farme dans l’ombre… », and at the bottom the link of Exile Market with the Grinding Gear Games disclaimer, taken from [`overlays/screens/texts.js`](../../overlays/screens/texts.js). The size of the OBS canvas, as the owner asked.
+- **Profile banner**: proposal 9, the SYLENT logo of the owner in white ([`assets/logos/sylent-wordmark.png`](../../assets/logos/sylent-wordmark.png)), centered, with « Chill et craft » in italics, so that the channel isn't tied to one game; no emblem. The sizes Twitch asks for weren't read on its settings page (its help center doesn't load for an automated reading): check them when uploading.
+- Set aside: the white and red lightning with a giant word (2, 3, 6), the name « SylentExile » in text (4 to 7), the Sylent emblem (5) and the Exile Market showcase on the banner (7).
+
+To export them again after a change: open the page with `?only=8` (or `9`), with the address of the choices above, and take a screenshot with Playwright at the size of the image (`.claude/skills/html-mockups/scripts/screenshot.sh <url> <output.png> 2560 1440`, or `1200 480`).
