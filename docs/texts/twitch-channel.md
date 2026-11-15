@@ -50,11 +50,29 @@ The 1.0 of Path of Exile 2 comes out on 2026-12-11 ([RPG Site](https://www.rpgsi
 
 ## Panels
 
-Each panel has a title, an optional image, a link for the image, and a description written in Markdown (no HTML). An image weighs at most 1 MB and measures at most 320 × 600 px, or Twitch resizes it. The panels of the first live have no image: the link of the image field works only with an image, so the links are in the descriptions.
+Each panel has a title, an optional image, a link for the image, and a description written in Markdown (no HTML). An image weighs at most 1 MB and measures at most 320 × 600 px, or Twitch resizes it. The links stay in the descriptions too, so that they work whatever the image.
 
 To edit them, on the page of the channel, click **Éditer les panneaux** at the bottom left of the video player, fill a panel, click **Envoyer**, and **+** for the next one. Click **Éditer les panneaux** again to see the result, and check that the lists and the links render.
 
 Order: À propos, Exile Market, Règles du chat.
+
+### Images
+
+| Panel | Image | Link of the image |
+|---|---|---|
+| À propos | [`assets/panels/about.png`](../../assets/panels/about.png) | none |
+| Exile Market | [`assets/panels/exile-market.png`](../../assets/panels/exile-market.png) | `https://exile-market.sylent.tools/` |
+| Règles du chat | [`assets/panels/chat-rules.png`](../../assets/panels/chat-rules.png) | none |
+
+Chosen by the owner on 2026-11-15 in the mock-up [`docs/mockups/panels.html`](../mockups/panels.html) (skill `html-mockups`, served with `python3 .claude/skills/html-mockups/assets/serve.py 8790`):
+
+- **Style**: proposal 9 « Bulle foudroyée », the explosive one, for the three panels: the background of the scenes `pause` and `end` (black, a red glow from the top right, the floor in perspective at opacity 0.3, the red line of the horizon), a drawing in white lines in the middle.
+- **Drawings**: a chat bubble struck by a red bolt (Règles du chat); the Sylent emblem in white (À propos) and the emblem of Exile Market in its red (Exile Market), at 0.55 of the bubble's size, without a bolt.
+- **Size**: 320 × 120 px, the width Twitch shows; a wider image would only be shrunk by Twitch.
+- **No title on the image, no rain**: the panel's title field carries the title.
+- Set aside: the titles drawn in the images (1 to 8, 10), the rain, white or red, and the bolts over or around the logos (11 to 14).
+
+To export them again after a change: open the page at real size (`?zoom=1`), with the address of the choices above, and take a screenshot of each frame (`.pnl-frame[data-number="9"]`, `15`, `16`) with Playwright at a device scale of 1, cropped to 320 × 120.
 
 ### À propos
 

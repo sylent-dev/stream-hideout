@@ -16,6 +16,7 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 - [x] **5.** The capture: the left screen through PipeWire, with Exile Market; the game's sound alone through a plugin; the microphone once, filtered, without clipping: [`docs/obs-capture.md`](docs/obs-capture.md) (#6).
 - [x] **6.** The scenes `game` (the webcam in 1920 × 1080, 250 × 250 with rounded corners), `pause` and `end` (animated rain pages in `overlays/screens/`, chosen in a mock-up), and the collection `sylent-exile` exported in `obs/`: [`docs/obs-scenes.md`](docs/obs-scenes.md) (#7).
 - [x] **7.** The texts of the Twitch channel (title, tags, bio, three panels, with the Exile Market disclaimer): [`docs/texts/twitch-channel.md`](docs/texts/twitch-channel.md) (#8).
+- [x] The images of the three panels, in the storm style of the scenes, with the owner's logos: [`docs/texts/twitch-channel.md`](docs/texts/twitch-channel.md#images) (#PR).
 
 ## First live
 
