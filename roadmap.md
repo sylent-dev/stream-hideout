@@ -3,7 +3,7 @@
 The channel **SylentExile** streams Path of Exile 2 in French, for three reasons: the fun of playing, building a community, and showcasing [Exile Market](https://exile-market.sylent.tools/) (v0.1.0, released on 2026-11-14) through game sessions.
 
 - Platform: **Twitch only** for now (chosen on 2026-11-14). YouTube waits in [`backlog.md`](backlog.md).
-- One pull request per step, in this order. Before the first live, every step serves that live.
+- One pull request per step, in this order. The first live took place on 2026-11-15; the next steps make the following ones better.
 - The OBS steps are written for Bazzite (KDE Plasma, Wayland) with an AMD graphics card, and each ends with a check the owner runs on their machine.
 
 ## Done
@@ -23,11 +23,17 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 
 ## First live
 
-- [ ] **The stream test**: run [`docs/stream-test.md`](docs/stream-test.md); its results fix the settings of steps 4 to 6 if needed, in their own pull request.
-- [ ] **9. `docs/live-checklists`**: the checklists of a live day (before, during, after), in French, with the exact names of the scenes and sources.
-- [ ] **First live.**
+- [x] **First live** on 2026-11-15, one hour, without a recording: the connection to Twitch held, but 1.0 % of the frames lagged in rendering and 1.2 % were skipped by the encoder (OBS log), the likely cause of the « average bitrate unstable » shown by Twitch.
 
-## After the first live
+## Next
 
-- [ ] **10. `docs/hardware-purchases`**: the purchases that would improve the stream the most for their price, ranked, from the inventory, the results of the stream test and the first lives; a dedicated microphone first, already planned by the owner. A gap that blocks the first live is solved at step 2 instead.
-- [ ] **11. Discord server**: its channels, roles, rules and welcome message (texts in French in `docs/texts/`), and its link in the Twitch panels. Split into several pull requests when the step starts.
+- [ ] **9. The lost frames**: let OBS keep up with the game, for instance by capping the game's frame rate (its setting in Path of Exile 2 and the reason checked in their documentation first); then, during a live with a recording, **Frames missed due to rendering lag** and **Skipped frames due to encoding lag** near 0 in **Stats**, along the tests of [`docs/stream-test.md`](docs/stream-test.md), whose results fix the settings of steps 4 to 6 if needed.
+- [ ] **10. The HUD overlay**: the character, its class and level, the deaths during the live, the area and its level, the time live, in a still band that hides nothing of the game (globes, skills, minimap, quests, stash, the price window of Exile Market). A wireframe first, grey blocks with the real texts over screenshots of the game (a map with the large minimap, a boss, the Atlas, the stash), then a mock-up in the style of the scenes.
+  - The data come from the game's log, `logs/Client.txt` in the game's folder (French client, checked on 2026-11-15): « <character> (<class>) a atteint le niveau N. », « <character> vient de mourir. », `[SCENE] Set Source [<area>]` and `Generating level N area`. The log also holds the chat and the whispers: a small local program reads only these lines and passes them to the overlay.
+  - Grinding Gear Games allow tools that read the game's logs as long as the user knows what they do with the data; they forbid touching the game or its files, and automated actions ([developer docs](https://www.pathofexile.com/developer/docs), 2026-11-15). Their API gives no deaths, area nor time for Path of Exile 2, and takes no new application.
+- [ ] **11. `docs/live-checklists`**: the checklists of a live day (before, during, after), in French, with the exact names of the scenes and sources; among them, show the glow and the badge of the mode played, start the recording, and keep the repository on `main` during a live, since OBS reads its files.
+
+## Later
+
+- [ ] **12. `docs/hardware-purchases`**: the purchases that would improve the stream the most for their price, ranked, from the inventory, the results of the stream test and the first lives; a dedicated microphone first, already planned by the owner.
+- [ ] **13. Discord server**: its channels, roles, rules and welcome message (texts in French in `docs/texts/`), and its link in the Twitch panels. Split into several pull requests when the step starts.
