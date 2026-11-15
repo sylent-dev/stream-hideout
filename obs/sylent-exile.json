@@ -776,7 +776,7 @@
                 "input": 0,
                 "pixelformat": 1196444237,
                 "resolution": 8246337209400,
-                "framerate": 30
+                "framerate": -1
             },
             "mixers": 0,
             "sync": 0,
