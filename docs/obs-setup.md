@@ -4,7 +4,7 @@ How OBS Studio is set up for the channel, on Bazzite (KDE Plasma, Wayland) with 
 
 - Part 1, the installation and the hardware encoder: this page (step 3).
 - Part 2, the profile settings for Twitch and the recording: [`obs-output.md`](obs-output.md) (step 4).
-- Part 3, the capture of the game, of Exile Market and of the sound: step 5.
+- Part 3, the capture of the game, of Exile Market and of the sound: [`obs-capture.md`](obs-capture.md) (step 5).
 
 OBS runs in English here (the system language is `en_US`): the menu names below are OBS's English ones.
 
