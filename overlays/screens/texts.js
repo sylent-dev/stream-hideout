@@ -7,7 +7,7 @@ window.TEXTS = {
     // The large word a lightning reveals behind the title, now and then.
     ghost: "PAUSE",
     title: "Petite pause",
-    subtitle: "La pluie bat fort, attendons qu’elle se calme",
+    subtitle: "La pluie bat fort, Sylent est parti s’abriter…",
   },
   end: {
     ghost: "MERCI",

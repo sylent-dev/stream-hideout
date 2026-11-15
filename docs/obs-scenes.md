@@ -62,7 +62,7 @@ Chosen by the owner on 2026-11-15 in the mock-up [`docs/mockups/screens.html`](m
 - **Layout**: the title and its subtitle centered on the screen; on `end`, the link in red just above the disclaimer, at the bottom, both over a dark shade.
 - **Rain** (« Pluie de sang »): straight drops, density ×2 and speed ×0.6 of the mock-up's base, one drop in six red; they land on a floor drawn as a grid in perspective, its lines running to a vanishing point at the center of the horizon (opacity 0.3), and leave flat rings or small splashes. Far drops land near the horizon, near ones at the bottom.
 - **Lightning**: every 4 to 9 seconds, white or red at random, without shaking the screen; it lights up a giant word behind the title (« PAUSE », « MERCI »).
-- **Texts**: « Petite pause » with « La pluie bat fort, attendons qu’elle se calme »; « Merci d’avoir regardé ! » with « À très bientôt ».
+- **Texts**: « Petite pause » with « La pluie bat fort, Sylent est parti s’abriter… » (changed on 2026-11-15 from « La pluie bat fort, attendons qu’elle se calme »); « Merci d’avoir regardé ! » with « À très bientôt ».
 
 Set aside the same day: a plain dark card (the first version); four fantasy styles (embers, editorial, arcane runes, neon); eight styles in the art direction (faded word, blood, glass, shards, blade, giant outline, burst of shards, scrolling rows); the other rains (drizzle, shower, window, storm, scarlet deluge), slanted drops, a moving floor, a shaking screen; the subtitle « Le temps que la pluie se calme » and the titles « Restez au sec, Exilés », « Même Wraeclast a besoin de souffler », « le temps d’aller chercher une Orbe divine », « Pendant ce temps, vos objets ne valent toujours rien ». The mock-up keeps the other rains for comparison.
 
