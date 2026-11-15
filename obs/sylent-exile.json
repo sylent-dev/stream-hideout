@@ -125,8 +125,8 @@
             "name": "end"
         }
     ],
-    "current_scene": "end",
-    "current_program_scene": "end",
+    "current_scene": "game",
+    "current_program_scene": "game",
     "canvases": [],
     "current_transition": "Fade",
     "transition_duration": 300,
@@ -320,7 +320,7 @@
             "id": "scene",
             "versioned_id": "scene",
             "settings": {
-                "id_counter": 12,
+                "id_counter": 17,
                 "custom_size": false,
                 "items": [
                     {
@@ -434,7 +434,62 @@
                         "private_settings": {}
                     },
                     {
-                        "name": "webcam-shadow",
+                        "name": "webcam-shadow-hc",
+                        "source_uuid": "eb6197b5-431f-4c2f-9cb1-729654aa8992",
+                        "visible": false,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 2560.0,
+                            "y": 1440.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 13,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 828.0,
+                            "y": 1085.0
+                        },
+                        "pos_rel": {
+                            "x": -0.62777775526046753,
+                            "y": 0.50694441795349121
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0013888889225199819,
+                            "y": 0.0013888889225199819
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 300
+                        },
+                        "hide_transition": {
+                            "duration": 300
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "webcam-shadow-sc",
                         "source_uuid": "627283e7-23d8-4a71-8273-7b6a90936228",
                         "visible": true,
                         "locked": true,
@@ -454,12 +509,12 @@
                         "id": 12,
                         "group_item_backup": false,
                         "pos": {
-                            "x": 844.0,
-                            "y": 1113.0
+                            "x": 828.0,
+                            "y": 1085.0
                         },
                         "pos_rel": {
-                            "x": -0.605555534362793,
-                            "y": 0.5458333492279053
+                            "x": -0.62777775526046753,
+                            "y": 0.50694441795349121
                         },
                         "scale": {
                             "x": 1.0,
@@ -509,12 +564,12 @@
                         "id": 11,
                         "group_item_backup": false,
                         "pos": {
-                            "x": 890.0,
-                            "y": 1160.0
+                            "x": 898.0,
+                            "y": 1155.0
                         },
                         "pos_rel": {
-                            "x": -0.5416666865348816,
-                            "y": 0.6111111640930176
+                            "x": -0.53055554628372192,
+                            "y": 0.60416662693023682
                         },
                         "scale": {
                             "x": 0.28409090638160706,
@@ -523,6 +578,226 @@
                         "scale_rel": {
                             "x": 0.28409090638160706,
                             "y": 0.28409090638160706
+                        },
+                        "bounds": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0013888889225199819,
+                            "y": 0.0013888889225199819
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 300
+                        },
+                        "hide_transition": {
+                            "duration": 300
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "webcam-badge-sc",
+                        "source_uuid": "421da0bd-7732-4c44-abe2-562b03e8bec3",
+                        "visible": false,
+                        "locked": false,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 2560.0,
+                            "y": 1440.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 14,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 868.0,
+                            "y": 1319.0
+                        },
+                        "pos_rel": {
+                            "x": -0.57222223281860352,
+                            "y": 0.83194446563720703
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0013888889225199819,
+                            "y": 0.0013888889225199819
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 300
+                        },
+                        "hide_transition": {
+                            "duration": 300
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "webcam-badge-hc",
+                        "source_uuid": "b142503a-0e70-41db-b8a4-31ce1a60b7f4",
+                        "visible": false,
+                        "locked": false,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 2560.0,
+                            "y": 1440.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 15,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 868.0,
+                            "y": 1319.0
+                        },
+                        "pos_rel": {
+                            "x": -0.57222223281860352,
+                            "y": 0.83194446563720703
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0013888889225199819,
+                            "y": 0.0013888889225199819
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 300
+                        },
+                        "hide_transition": {
+                            "duration": 300
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "webcam-badge-hcssf",
+                        "source_uuid": "f23f721a-1f65-4f4e-8bb2-1ebf63d03a27",
+                        "visible": false,
+                        "locked": false,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 2560.0,
+                            "y": 1440.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 16,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 868.0,
+                            "y": 1319.0
+                        },
+                        "pos_rel": {
+                            "x": -0.57222223281860352,
+                            "y": 0.83194446563720703
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0013888889225199819,
+                            "y": 0.0013888889225199819
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 300
+                        },
+                        "hide_transition": {
+                            "duration": 300
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "webcam-badge-scssf",
+                        "source_uuid": "e601b782-d976-468b-8cd1-191cec7dc14e",
+                        "visible": true,
+                        "locked": false,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 2560.0,
+                            "y": 1440.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 17,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 868.0,
+                            "y": 1319.0
+                        },
+                        "pos_rel": {
+                            "x": -0.57222223281860352,
+                            "y": 0.83194446563720703
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
                         },
                         "bounds": {
                             "x": 1.0,
@@ -562,10 +837,20 @@
                 "libobs.hide_scene_item.5": [],
                 "libobs.show_scene_item.10": [],
                 "libobs.hide_scene_item.10": [],
+                "libobs.show_scene_item.13": [],
+                "libobs.hide_scene_item.13": [],
                 "libobs.show_scene_item.12": [],
                 "libobs.hide_scene_item.12": [],
                 "libobs.show_scene_item.11": [],
-                "libobs.hide_scene_item.11": []
+                "libobs.hide_scene_item.11": [],
+                "libobs.show_scene_item.14": [],
+                "libobs.hide_scene_item.14": [],
+                "libobs.show_scene_item.15": [],
+                "libobs.hide_scene_item.15": [],
+                "libobs.show_scene_item.16": [],
+                "libobs.hide_scene_item.16": [],
+                "libobs.show_scene_item.17": [],
+                "libobs.hide_scene_item.17": []
             },
             "deinterlace_mode": 0,
             "deinterlace_field_order": 0,
@@ -587,7 +872,7 @@
             "mixers": 197,
             "sync": 0,
             "flags": 0,
-            "volume": 0.7456046342849731,
+            "volume": 0.74560463428497314,
             "balance": 0.5,
             "enabled": true,
             "muted": false,
@@ -776,7 +1061,7 @@
                 "input": 0,
                 "pixelformat": 1196444237,
                 "resolution": 8246337209400,
-                "framerate": -1
+                "framerate": 30
             },
             "mixers": 0,
             "sync": 0,
@@ -859,12 +1144,147 @@
         },
         {
             "prev_ver": 553648129,
-            "name": "webcam-shadow",
+            "name": "webcam-badge-hc",
+            "uuid": "b142503a-0e70-41db-b8a4-31ce1a60b7f4",
+            "id": "image_source",
+            "versioned_id": "image_source",
+            "settings": {
+                "file": "assets/webcam/webcam-badge-hc.png"
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {},
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "monitoring_enabled": false,
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 553648129,
+            "name": "webcam-badge-hcssf",
+            "uuid": "f23f721a-1f65-4f4e-8bb2-1ebf63d03a27",
+            "id": "image_source",
+            "versioned_id": "image_source",
+            "settings": {
+                "file": "assets/webcam/webcam-badge-ssf-hc.png"
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {},
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "monitoring_enabled": false,
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 553648129,
+            "name": "webcam-badge-sc",
+            "uuid": "421da0bd-7732-4c44-abe2-562b03e8bec3",
+            "id": "image_source",
+            "versioned_id": "image_source",
+            "settings": {
+                "file": "assets/webcam/webcam-badge-sc.png"
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {},
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "monitoring_enabled": false,
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 553648129,
+            "name": "webcam-badge-scssf",
+            "uuid": "e601b782-d976-468b-8cd1-191cec7dc14e",
+            "id": "image_source",
+            "versioned_id": "image_source",
+            "settings": {
+                "file": "assets/webcam/webcam-badge-ssf-sc.png"
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {},
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "monitoring_enabled": false,
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 553648129,
+            "name": "webcam-shadow-hc",
+            "uuid": "eb6197b5-431f-4c2f-9cb1-729654aa8992",
+            "id": "image_source",
+            "versioned_id": "image_source",
+            "settings": {
+                "file": "assets/webcam/webcam-glow-hardcore-narrow.png"
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {},
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "monitoring_enabled": false,
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 553648129,
+            "name": "webcam-shadow-sc",
             "uuid": "627283e7-23d8-4a71-8273-7b6a90936228",
             "id": "image_source",
             "versioned_id": "image_source",
             "settings": {
-                "file": "assets/webcam/webcam-shadow.png"
+                "file": "assets/webcam/webcam-glow-softcore-narrow.png"
             },
             "mixers": 0,
             "sync": 0,
