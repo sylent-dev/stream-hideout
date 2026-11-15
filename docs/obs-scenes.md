@@ -8,7 +8,7 @@ The canvas is 2560 × 1440 ([`obs-output.md`](obs-output.md)); every position be
 
 | Scene | Sources, from front to back | What the viewers see and hear |
 |---|---|---|
-| `game` | `webcam-badge-sc`, `webcam-badge-ssf-sc`, `webcam-badge-hc`, `webcam-badge-ssf-hc`, `webcam`, `webcam-glow-hardcore`, `webcam-glow-softcore`, `game-audio`, `game-screen` | the left screen, the webcam in a 250 × 250 square with rounded corners, a red glow and badge in hardcore, blue in softcore; the game and the voice |
+| `game` | `webcam-badge-scssf`, `webcam-badge-hcssf`, `webcam-badge-hc`, `webcam-badge-sc`, `webcam`, `webcam-shadow-sc`, `webcam-shadow-hc`, `game-audio`, `game-screen` | the left screen, the webcam in a 250 × 250 square with rounded corners, a red glow and badge in hardcore, blue in softcore; the game and the voice |
 | `pause` | `pause-screen` | « Petite pause » over a dark rain, now and then a lightning; the voice only |
 | `end` | `end-screen` | « Merci d’avoir regardé ! » over the same rain, the link of Exile Market and the Grinding Gear Games disclaimer; the voice only |
 
@@ -46,15 +46,17 @@ The mask and the glows were generated for this project with Python (Pillow). A w
 
 The owner plays hardcore (a character that dies is lost for the league) or softcore, alone or in solo self-found (SSF: no trade with other players). The webcam tells the viewers which, by two images chosen on 2026-11-15 in the mock-up [`mockups/webcam.html`](mockups/webcam.html):
 
-- **The glow** behind the webcam, in place of the black shadow, which hardly showed on the dark areas of the game: the red of Exile Market (`#e5383b`, the red of the scenes) for hardcore, an azure blue (`#3a86ff`) for softcore. A rounded square of the webcam's size, grown by its spread, centered (no offset), blurred over 20 pixels (Pillow's `GaussianBlur(20)`, a standard deviation, like a CSS `blur(20px)`), at 50 % opacity. Two spreads are made and both kept, so that the owner can switch from one to the other: 5 pixels (`narrow`) and 10 pixels (`wide`). The four images are 390 × 390, drawn at their size at X `822`, Y `1091`, so that changing the file of a source needs no new position.
-- **The badge** at the bottom left inside the webcam, one image per mode, whose texts are in [`texts/webcam-badges.js`](texts/webcam-badges.js): `SC`, `SSF SC`, `HC`, `SSF HC`. Letters lit by the color of the mode, with no ground (style 9 of the mock-up), in Rajdhani Bold at 32 pixels ([`assets/fonts/rajdhani-bold.ttf`](../assets/fonts/rajdhani-bold.ttf)), « SSF » in light gray. The four images are 199 × 112, the text at the same place in each, drawn at their size at X `864`, Y `1327`. They were rendered from section 9 of the mock-up with Playwright, on a transparent background; a new badge is rendered the same way.
+- **The glow** behind the webcam, in place of the black shadow, which hardly showed on the dark areas of the game: the red of Exile Market (`#e5383b`, the red of the scenes) for hardcore, an azure blue (`#3a86ff`) for softcore. A rounded square of the webcam's size, grown by its spread, centered (no offset), blurred over 20 pixels (Pillow's `GaussianBlur(20)`, a standard deviation, like a CSS `blur(20px)`), at 50 % opacity. Two spreads are made and both kept, so that the owner can switch from one to the other: 5 pixels (`narrow`, the one in OBS on 2026-11-15) and 10 pixels (`wide`). The four images are 390 × 390, drawn at their size at X `828`, Y `1085` (70 pixels up and left of the webcam), so that changing the file of a source needs no new position.
+- **The badge** at the bottom left inside the webcam, one image per mode, whose texts are in [`texts/webcam-badges.js`](texts/webcam-badges.js): `SC`, `SSF SC`, `HC`, `SSF HC`. Letters lit by the color of the mode, with no ground (style 9 of the mock-up), in Rajdhani Bold at 32 pixels ([`assets/fonts/rajdhani-bold.ttf`](../assets/fonts/rajdhani-bold.ttf)), « SSF » in light gray. The four images are 199 × 112, the text at the same place in each, drawn at their size at X `868`, Y `1319`, tuned by eye by the owner. They were rendered from section 9 of the mock-up with Playwright, on a transparent background; a new badge is rendered the same way.
+
+The sources keep the names the owner gave them in OBS (2026-11-15); the files keep theirs.
 
 | Mode | Glow (visible) | Badge (visible) |
 |---|---|---|
-| Softcore | `webcam-glow-softcore` | `webcam-badge-sc` |
-| SSF softcore | `webcam-glow-softcore` | `webcam-badge-ssf-sc` |
-| Hardcore | `webcam-glow-hardcore` | `webcam-badge-hc` |
-| SSF hardcore | `webcam-glow-hardcore` | `webcam-badge-ssf-hc` |
+| Softcore | `webcam-shadow-sc` | `webcam-badge-sc` |
+| SSF softcore | `webcam-shadow-sc` | `webcam-badge-scssf` |
+| Hardcore | `webcam-shadow-hc` | `webcam-badge-hc` |
+| SSF hardcore | `webcam-shadow-hc` | `webcam-badge-hcssf` |
 
 Before each live, the owner shows the glow and the badge of the character played, with the **eye** icon of the **Sources** dock, and hides the others: the checklist of the live day holds this step. A color alone tells nothing to a new viewer: the badge, and the mode in the title of the live, say it in words.
 
@@ -114,7 +116,7 @@ Before starting: the game and Exile Market running on the left screen (`DP-2`), 
    - **Device**: **OBSBOT Meet 2: OBSBOT Meet 2 St (usb-…)**, not **OBS Virtual Camera**;
    - **Video Format**: **Motion-JPEG**;
    - **Resolution**: **1920x1080**;
-   - **Frame Rate**: **Leave Unchanged** (see [The webcam](#the-webcam-v4l2-in-place-of-pipewire): OBS 33.0.1 can't set another rate on this camera, which stays at 60 fps);
+   - **Frame Rate**: **Leave Unchanged**; a value chosen there is ignored (the export of 2026-11-15 holds `30`, and the log of OBS still shows `Framerate: 60.00 fps`; see [The webcam](#the-webcam-v4l2-in-place-of-pipewire): OBS 33.0.1 can't set another rate on this camera, which stays at 60 fps);
    - leave the other fields as they are, and click **OK**.
 7. In the **Sources** dock, right-click `webcam`, then **Filters**.
 8. Under **Effect Filters**, click **+**, then **Crop/Pad**, keep the name, **OK**: **Relative** checked, **Left** `420`, **Right** `420`, **Top** `0`, **Bottom** `0`. The preview of the filter shows a square. If your face isn't centered, move the 840 pixels between the two sides (for example **Left** `300`, **Right** `540` moves the square to the left). The picture must stay square, or step 10 stretches it: what is cut on the sides must be 840 pixels more than what is cut at the top and the bottom (**Left** + **Right** = 840 + **Top** + **Bottom**). For example, to cut 200 pixels at the top, which zooms on the face: **Top** `200`, **Bottom** `0`, **Left** `520`, **Right** `520`, a square of 880 × 880.
@@ -124,7 +126,7 @@ Before starting: the game and Exile Market running on the left screen (`DP-2`), 
    - **Stretch Image (discard image aspect ratio)**: unchecked.
    The corners of the square are now rounded. Check the order of the list: **Crop/Pad** first, **Image Mask/Blend** under it; if not, select one and use the arrows under the list. Close the filters window.
 10. Right-click `webcam`, then **Transform → Edit Transform**:
-    - **Position**: **X** `892`, **Y** `1161`;
+    - **Position**: **X** `898`, **Y** `1155`;
     - **Alignment**: **Top Left**;
     - **Size**: **Width** `250`, **Height** `250`;
     - **Bounds Type**: leave the first entry of the list, the default (no bounding box);
@@ -135,13 +137,13 @@ Before starting: the game and Exile Market running on the left screen (`DP-2`), 
 
 In a collection that still has the black shadow, remove it first: select `webcam-shadow` in the **Sources** dock, click the **lock** icon to unlock it, then the **trash** icon, and confirm with **Yes**.
 
-11. In the **Sources** dock, click **+**, then **Image**. **Create new**, name `webcam-glow-hardcore`, then **OK**. **Image File**: **Browse**, then `assets/webcam/webcam-glow-hardcore-wide.png` in the repository. Click **OK**.
-12. Right-click `webcam-glow-hardcore`, then **Transform → Edit Transform**: **Position** **X** `822`, **Y** `1091`; **Alignment**: **Top Left**; **Size**: **Width** `390`, **Height** `390`. Click **Close**.
-13. Do the same for `webcam-glow-softcore`, with `assets/webcam/webcam-glow-softcore-wide.png` and the same transform.
-14. Add four **Image** sources the same way, each with the file of its name in `assets/webcam/`: `webcam-badge-sc`, `webcam-badge-ssf-sc`, `webcam-badge-hc`, `webcam-badge-ssf-hc` (e.g. `webcam-badge-sc.png`). Transform of each: **Position** **X** `864`, **Y** `1327`; **Alignment**: **Top Left**; **Size**: **Width** `199`, **Height** `112`.
-15. Put the sources in this order in the **Sources** dock, from top to bottom, by dragging them: `webcam-badge-sc`, `webcam-badge-ssf-sc`, `webcam-badge-hc`, `webcam-badge-ssf-hc`, `webcam`, `webcam-glow-hardcore`, `webcam-glow-softcore`, `game-audio`, `game-screen`. The source at the top is drawn in front: the badges over the webcam, the glows behind it.
-16. Click the **eye** icon of every glow and badge but `webcam-glow-softcore` and `webcam-badge-sc`, to hide them: one glow and one badge show at a time (see [the table of the modes](#the-mode-played-glow-and-badge)).
-17. Click the **lock** icon of `webcam` and of the six images, so a click in the preview can't move them.
+11. In the **Sources** dock, click **+**, then **Image**. **Create new**, name `webcam-shadow-hc`, then **OK**. **Image File**: **Browse**, then `assets/webcam/webcam-glow-hardcore-narrow.png` in the repository. Click **OK**.
+12. Right-click `webcam-shadow-hc`, then **Transform → Edit Transform**: **Position** **X** `828`, **Y** `1085`; **Alignment**: **Top Left**; **Size**: **Width** `390`, **Height** `390`. Click **Close**.
+13. Do the same for `webcam-shadow-sc`, with `assets/webcam/webcam-glow-softcore-narrow.png` and the same transform.
+14. Add four **Image** sources the same way, each with its file of `assets/webcam/`: `webcam-badge-sc` (`webcam-badge-sc.png`), `webcam-badge-scssf` (`webcam-badge-ssf-sc.png`), `webcam-badge-hc` (`webcam-badge-hc.png`), `webcam-badge-hcssf` (`webcam-badge-ssf-hc.png`). Transform of each: **Position** **X** `868`, **Y** `1319`; **Alignment**: **Top Left**; **Size**: **Width** `199`, **Height** `112`.
+15. Put the sources in this order in the **Sources** dock, from top to bottom, by dragging them: `webcam-badge-scssf`, `webcam-badge-hcssf`, `webcam-badge-hc`, `webcam-badge-sc`, `webcam`, `webcam-shadow-sc`, `webcam-shadow-hc`, `game-audio`, `game-screen`. The source at the top is drawn in front: the badges over the webcam, the glows behind it.
+16. Click the **eye** icon of every glow and badge but `webcam-shadow-sc` and `webcam-badge-sc`, to hide them: one glow and one badge show at a time (see [the table of the modes](#the-mode-played-glow-and-badge)).
+17. Click the **lock** icon of `webcam` and of the two glows, so a click in the preview can't move them. The badges stay unlocked, so that the owner can still adjust them.
 
 ### The scene `pause`
 
@@ -179,7 +181,7 @@ Claude Code then cleans the exported file (see [The export](#the-export)) before
 The owner runs this check right after the procedure, with the game and Exile Market running.
 
 1. Look at the **Scenes** dock. Expected: exactly `game`, `pause` and `end`, in that order; the title bar of OBS ends with `Scenes: sylent-exile`.
-2. Select `game` and look at the preview. Expected: the webcam is a square with rounded corners, at the bottom, left of the character, with a blue glow around it and « SC » at its bottom left; show `webcam-glow-hardcore` and `webcam-badge-ssf-hc` in place of the softcore ones: the glow turns red and the badge reads « SSF HC »; then back to softcore; the picture is sharp when the preview is enlarged (right-click the preview, **Preview Scaling → Canvas (2560x1440)**, then back to **Scale to Window**).
+2. Select `game` and look at the preview. Expected: the webcam is a square with rounded corners, at the bottom, left of the character, with a blue glow around it and « SC » at its bottom left; show `webcam-shadow-hc` and `webcam-badge-hcssf` in place of the softcore ones: the glow turns red and the badge reads « SSF HC »; then back to softcore; the picture is sharp when the preview is enlarged (right-click the preview, **Preview Scaling → Canvas (2560x1440)**, then back to **Scale to Window**).
 3. In the game, open the stash and the inventory, put the pointer over an item of the inventory and press **Ctrl+D**. Expected: the webcam hides no cell of the stash or the inventory, nor the price window.
 4. Click `pause` and watch for thirty seconds. Expected: the game and the webcam disappear; the title and its subtitle show centered, « pause » in red, the subtitle in italics; the rain falls straight on the grid, and at least one lightning, white or red, lights up « PAUSE » behind the title; in the **Audio Mixer**, `game-audio` is gone and `microphone` still moves when you speak.
 5. Click `end`. Expected: « Merci d’avoir regardé ! » with « regardé ! » in red, « À très bientôt » in italics, the link in red just above the disclaimer at the bottom, both readable over the rain.
