@@ -11,8 +11,9 @@
   Garamond, a still « Pluie de sang » over a floor in perspective.
 
   The offline image is drawn at the size of the OBS canvas (2560 × 1440), as the owner asked on
-  2026-11-15; the banner at 1200 × 480, to be checked against the size Twitch's settings page asks
-  for. The rain is drawn from a seed per proposal, so that an image stays the same from one reload
+  2026-11-15. Twitch fills the header of the channel page with the banner and keeps a thin band in
+  the middle of its height (about 2320 × 188 px on a 2560 px wide screen): the chosen banner (10)
+  is 2560 × 512, its content inside that band, which the mock-up shows dashed. The rain is drawn from a seed per proposal, so that an image stays the same from one reload
   to the next. "?only=<number>" shows one image alone at its real size, for the export.
 
   Serve the repository root, then open http://127.0.0.1:8790/docs/mockups/channel-images.html :
@@ -82,6 +83,13 @@
   .img-banner .img-subtitle { margin-top: 12px; font-size: calc(var(--banner-title) * .4); }
   .img-banner .img-wordmark { height: var(--banner-title); aspect-ratio: 1665 / 383; background: #fff; -webkit-mask: url("../../assets/logos/sylent-wordmark.png") center / contain no-repeat; mask: url("../../assets/logos/sylent-wordmark.png") center / contain no-repeat; filter: drop-shadow(0 0 30px #000); }
   .img-banner .img-wordmark + .img-subtitle { margin-top: calc(var(--banner-title) * .3); }
+  .img-banner .img-inline { flex-direction: row; justify-content: center; align-items: center; gap: 44px; }
+  .img-banner .img-inline .img-wordmark { height: var(--band-logo); }
+  .img-banner .img-inline .img-subtitle { margin: 0; font-size: calc(var(--band-logo) * .62); }
+  /* What Twitch keeps of the banner on a wide screen (inputs/empty-home.png, 2026-11-15): it fills
+     a header about 2320 × 188 px, so only a band in the middle of the height shows. */
+  .img-crop { position: absolute; z-index: 3; left: 0; right: 0; top: 50%; height: var(--crop); transform: translateY(-50%); outline: 2px dashed #e9ecef99; box-shadow: 0 0 0 100vmax #0e0e10b3; pointer-events: none; }
+  :root[data-crop="off"] .img-crop, body.is-only .img-crop { display: none; }
   .img-banner .img-side { gap: 36px; justify-content: center; }
   .img-banner .img-side .img-words { text-align: left; }
   .img-banner .img-logo { flex: none; background: var(--logo-color, #fff); -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; filter: drop-shadow(0 0 14px #000); }
@@ -113,6 +121,8 @@
     density: { label: "Rain density", range: { min: 0, max: 2, step: 0.1 }, unit: "×", fallback: "1" },
     red: { label: "Red drops", range: { min: 0, max: 0.5, step: 0.05 }, fallback: "0.15" },
     grid: { label: "Floor", range: { min: 0, max: 1, step: 0.05 }, fallback: "0.3" },
+    crop: { label: "Twitch crop", select: true, options: { on: "Shown", off: "Hidden" }, fallback: "on" },
+    bandLogo: { label: "Band logo", range: { min: 60, max: 180, step: 2 }, variable: "--band-logo", unit: "px", fallback: "90" },
     bannerTitle: { label: "Banner title", range: { min: 60, max: 150, step: 2 }, variable: "--banner-title", unit: "px", fallback: "110" },
   };
 
@@ -141,7 +151,10 @@
 
   // Every proposal, numbered once across the page. lightning: null, "white" or "red"; ghost: the giant word it reveals.
   const SECTIONS = [
-    ["Chosen (2026-11-15): 1 without the rings, and 4 with the SYLENT logo and « Chill et craft »", [
+    ["Chosen banner (2026-11-15): 10, made for Twitch's crop, the logo at 90 px", [
+      { number: 10, name: "Bandeau · logo SYLENT", text: "2560 × 512: Twitch fills its header with the image and keeps only a band in the middle (dashed); the logo and the subtitle sit in that band, the rain fills the rest.", kind: "banner", size: [2560, 512], crop: true, html: `<div class="img-layer img-center img-inline"><div class="img-wordmark" role="img" aria-label="Sylent"></div><p class="img-subtitle">${T.banner.tagline}</p></div>`, lightning: null, rings: false },
+    ]],
+    ["Chosen offline image (2026-11-15): 8, proposal 1 without the rings; banner 9 set aside, since Twitch crops it to a thin band", [
       { number: 8, name: "Pluie calme · sans cercles", text: "Proposal 1 without the rings where the drops land; the small splashes stay.", kind: "offline", html: offline, lightning: null, rings: false },
       { number: 9, name: "Sobre · logo SYLENT", text: "The SYLENT logo in white, centered, « Chill et craft » in italics under it; no emblem.", kind: "banner", html: `<div class="img-layer img-center"><div class="img-wordmark" role="img" aria-label="Sylent"></div><p class="img-subtitle">${T.banner.tagline}</p></div>`, lightning: null },
     ]],
@@ -174,7 +187,7 @@
 
   // One still moment of overlays/screens/rain.js, at the scale of the image (s = 1 on the OBS canvas).
   function drawStill(canvas, proposal, ratio) {
-    const [W, H] = SIZES[proposal.kind];
+    const [W, H] = proposal.size ?? SIZES[proposal.kind];
     const s = H / 1440;
     canvas.width = W * ratio;
     canvas.height = H * ratio;
@@ -309,8 +322,10 @@
     }
   }
   const frameHtml = (proposal, zoom) => {
-    const [W, H] = SIZES[proposal.kind];
-    return `<div class="page-twitch"><div class="img-frame img-${proposal.kind}" data-number="${proposal.number}" style="width:${W}px;height:${H}px;zoom:${zoom}"><canvas class="img-rain" data-number="${proposal.number}"></canvas>${proposal.html}</div></div>`;
+    const [W, H] = proposal.size ?? SIZES[proposal.kind];
+    // The header Twitch fills is about 2320 × 188 px: the image is scaled to its width, and the middle kept.
+    const crop = proposal.crop ? `<div class="img-crop" style="--crop:${Math.round(188 * W / 2320)}px"></div>` : "";
+    return `<div class="page-twitch"><div class="img-frame img-${proposal.kind}" data-number="${proposal.number}" style="width:${W}px;height:${H}px;zoom:${zoom}"><canvas class="img-rain" data-number="${proposal.number}"></canvas>${proposal.html}${crop}</div></div>`;
   };
 
   function applyVariables() {
@@ -321,6 +336,7 @@
   const keepInAddress = () => history.replaceState(null, "", "?" + new URLSearchParams(only ? { ...chosen, only } : chosen));
 
   function render() {
+    document.documentElement.dataset.crop = chosen.crop;
     applyVariables();
     if (only) {
       document.body.classList.add("is-only");
@@ -337,7 +353,7 @@
     document.getElementById("sheet").innerHTML = `
       <header class="page-header"><h1>Twitch channel images</h1><p>The offline image and the profile banner, over the dark page of a Twitch channel. Proposals are numbered once across the page: give their number. The sliders apply to every image, so that they match.</p></header>
       ${SECTIONS.map(([title, slots]) => `<section class="page-section"><h2>${title}</h2><div class="page-row">${
-        slots.map(proposal => `<div class="page-slot"><span><b>${proposal.number} · ${proposal.name}</b> — ${proposal.text}</span>${frameHtml(proposal, view[proposal.kind] / SIZES[proposal.kind][0])}</div>`).join("")}</div></section>`).join("")}`;
+        slots.map(proposal => `<div class="page-slot"><span><b>${proposal.number} · ${proposal.name}</b> — ${proposal.text}</span>${frameHtml(proposal, view[proposal.kind] / (proposal.size ?? SIZES[proposal.kind])[0])}</div>`).join("")}</div></section>`).join("")}`;
     drawAll();
   }
 

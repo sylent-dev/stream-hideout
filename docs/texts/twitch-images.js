@@ -1,7 +1,7 @@
 // The texts drawn on the offline image and the profile banner of the Twitch channel, in French
 // (see twitch-channel.md). The link of Exile Market and its disclaimer come from
 // overlays/screens/texts.js (end), so that they never differ from the scene « Fin ».
-// The banner chosen shows the SYLENT logo (assets/logos/sylent-wordmark.png) instead of a name.
+// The banner chosen (10) shows the SYLENT logo (assets/logos/sylent-wordmark.png) instead of a name.
 // The last word of a title is drawn in red, as on the scenes « Pause » and « Fin ».
 window.CHANNEL_IMAGE_TEXTS = {
   offline: {
