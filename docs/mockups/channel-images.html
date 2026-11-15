@@ -70,10 +70,12 @@
   .img-offline .img-content::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 50%; height: 900px; transform: translateY(-50%); background: radial-gradient(ellipse 50% 45% at 50% 50%, var(--shade) 0%, transparent 100%); }
   .img-offline .img-title { font-size: 150px; }
   .img-offline .img-subtitle { margin-top: 36px; font-size: 80px; }
-  .img-offline .img-footer { position: absolute; z-index: 2; left: 260px; right: 260px; bottom: 56px; text-align: center; text-shadow: 0 0 12px #000; }
-  .img-offline .img-footer::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 2200px; height: 260px; transform: translate(-50%, -50%); background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--shade-strong) 0%, transparent 100%); }
-  .img-offline .img-link { margin-bottom: 10px; font-size: 26px; }
-  .img-offline .img-note { font-size: 24px; }
+  /* Twitch shows the offline image in a player about 530 px wide (2026-11-15): the link and the
+     disclaimer are sized for that, not for the canvas of « Fin ». */
+  .img-offline .img-footer { position: absolute; z-index: 2; left: 200px; right: 200px; bottom: 64px; text-align: center; text-shadow: 0 0 16px #000; }
+  .img-offline .img-footer::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 2500px; height: calc(var(--offline-link) * 6); transform: translate(-50%, -50%); background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--shade-strong) 0%, transparent 100%); }
+  .img-offline .img-link { margin-bottom: calc(var(--offline-link) * .3); font-size: var(--offline-link); }
+  .img-offline .img-note { font-size: var(--offline-note); line-height: 1.3; }
 
   /* The banners. */
   .img-banner .img-layer { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; }
@@ -114,6 +116,7 @@
   const VIEWS = {
     real: { label: "Real size", offline: 2560, banner: 1200 },
     computer: { label: "Computer", offline: 1280, banner: 1200 },
+    player: { label: "Twitch player, offline (530 px)", offline: 530, banner: 1200 },
     phone: { label: "Phone", offline: 400, banner: 400 },
   };
   const VARIANTS = {
@@ -121,6 +124,8 @@
     density: { label: "Rain density", range: { min: 0, max: 2, step: 0.1 }, unit: "×", fallback: "1" },
     red: { label: "Red drops", range: { min: 0, max: 0.5, step: 0.05 }, fallback: "0.15" },
     grid: { label: "Floor", range: { min: 0, max: 1, step: 0.05 }, fallback: "0.3" },
+    offlineLink: { label: "Offline link", range: { min: 20, max: 100, step: 2 }, variable: "--offline-link", unit: "px", fallback: "64" },
+    offlineNote: { label: "Offline disclaimer", range: { min: 20, max: 80, step: 2 }, variable: "--offline-note", unit: "px", fallback: "44" },
     crop: { label: "Twitch crop", select: true, options: { on: "Shown", off: "Hidden" }, fallback: "on" },
     bandLogo: { label: "Band logo", range: { min: 60, max: 180, step: 2 }, variable: "--band-logo", unit: "px", fallback: "90" },
     bannerTitle: { label: "Banner title", range: { min: 60, max: 150, step: 2 }, variable: "--banner-title", unit: "px", fallback: "110" },
