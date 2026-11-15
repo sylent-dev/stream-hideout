@@ -11,10 +11,10 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 - [x] Set up the project conventions and the Claude Code settings (#1).
 - [x] **1.** The roadmap, the backlog and the lessons (#2).
 - [x] **2.** The inventory of the setup: [`docs/hardware.md`](docs/hardware.md); nothing blocks the first live (#3).
+- [x] **3.** OBS 33.0.1 from Flathub and its VA-API encoders: [`docs/obs-setup.md`](docs/obs-setup.md) (#4).
 
 ## First live
 
-- [ ] **3. `docs/obs-install`**: `docs/obs-setup.md`, first part: OBS on Bazzite, installed from Flathub, its version, and the hardware encoder of the AMD card (VA-API) showing in its settings.
 - [ ] **4. `docs/obs-output`**: the profile settings for Twitch: encoder, bitrate, resolution, frame rate and keyframe interval, chosen from Twitch's recommendations and the upload measured at step 2, plus the local recording.
 - [ ] **5. `docs/obs-capture`**: the capture under Wayland: the game in windowed fullscreen and the Exile Market window (XWayland) both on screen, the method to compare (PipeWire screen capture, window capture); the audio sources (game, microphone, other sounds) kept separate.
 - [ ] **6. `feat/first-scenes`**: the scenes of the first live (« Jeu », « Pause », « Fin »), with the webcam in a corner of « Jeu », their texts in `docs/texts/`, and the scene collection exported in `obs/`, without absolute paths.
