@@ -133,7 +133,7 @@ Under Proton, the game's sound stream has two names in PipeWire (read with `pact
 
 24. In the **Audio Mixer** dock, set the fader of `microphone` at **0 dB**. Speak as during a game, for ten seconds: the meter should reach the yellow. If it stays in the green, open its filters again, add a **Gain** filter, move it to the second place with the arrows under the list, and raise its **Gain** until a normal sentence reaches the yellow.
 25. Shout once, as during a boss fight: the meter stops at −6 dB (the limiter) and never reaches the red end.
-26. During a fight in the game, set the fader of `game-audio` (start at about −15 dB) so that its meter stays about 10 dB under the voice's.
+26. Set the fader of `game-audio` at **0 dB**. During a fight, its meter should stay about 10 dB under the voice's; lower the fader only if the game comes closer. In the check of 2026-11-15, the fader at −16 dB left the game 27 dB under the voice (loudness over 3 seconds, at its loudest: −43.7 LUFS for the game, −16.7 for the voice), almost inaudible: at 0 dB, it comes about 11 dB under.
 
 The settings save themselves in the scene collection: nothing to export at this step (step 6 exports the collection).
 
