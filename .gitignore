@@ -17,8 +17,10 @@
 .env.*
 !.env.example
 
-# The OBS file that holds the stream key, if a profile is ever exported.
+# The OBS files that hold the stream key and the tokens of a connected
+# account, if a profile is ever exported.
 service.json
+basic.ini
 
 # Recordings and stream tests: too heavy for Git.
 *.mkv

@@ -12,11 +12,11 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 - [x] **1.** The roadmap, the backlog and the lessons (#2).
 - [x] **2.** The inventory of the setup: [`docs/hardware.md`](docs/hardware.md); nothing blocks the first live (#3).
 - [x] **3.** OBS 33.0.1 from Flathub and its VA-API encoders: [`docs/obs-setup.md`](docs/obs-setup.md) (#4).
+- [x] **4.** The profile for Twitch (1600 × 900 at 60 fps, H.264 CBR 6000 kbps) and the recording (2560 × 1440, AV1): [`docs/obs-output.md`](docs/obs-output.md) (#5).
 
 ## First live
 
-- [ ] **4. `docs/obs-output`**: the profile settings for Twitch: encoder, bitrate, resolution, frame rate and keyframe interval, chosen from Twitch's recommendations and the upload measured at step 2, plus the local recording.
-- [ ] **5. `docs/obs-capture`**: the capture under Wayland: the game in windowed fullscreen and the Exile Market window (XWayland) both on screen, the method to compare (PipeWire screen capture, window capture); the audio sources (game, microphone, other sounds) kept separate.
+- [ ] **5. `docs/obs-capture`**: the capture under Wayland: the game in windowed fullscreen and the Exile Market window (XWayland) both on screen, the method to compare (PipeWire screen capture, window capture); the audio sources (game, microphone, other sounds) kept separate, on the recording tracks of step 4 (1: the whole mix, 2: the microphone, 3: the game). The microphone sounds poor to the owner (recording of 2026-11-15, whose mix reached 0 dBFS): its level without clipping, and the filters of OBS that fit it.
 - [ ] **6. `feat/first-scenes`**: the scenes of the first live (« Jeu », « Pause », « Fin »), with the webcam in a corner of « Jeu », their texts in `docs/texts/`, and the scene collection exported in `obs/`, without absolute paths.
 - [ ] **7. `content/twitch-channel`**: in `docs/texts/`, the stream title, category and tags, the bio and the panels, including an Exile Market panel with its link and the Grinding Gear Games disclaimer.
 - [ ] **8. `docs/stream-test`**: the guide of the stream test, with a blank table of results; its results fix the settings of steps 4 to 6 if needed.
