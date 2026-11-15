@@ -12,7 +12,7 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 - [x] **1.** The roadmap, the backlog and the lessons (#2).
 - [x] **2.** The inventory of the setup: [`docs/hardware.md`](docs/hardware.md); nothing blocks the first live (#3).
 - [x] **3.** OBS 33.0.1 from Flathub and its VA-API encoders: [`docs/obs-setup.md`](docs/obs-setup.md) (#4).
-- [x] **4.** The profile for Twitch (1600 × 900 at 60 fps, H.264 CBR 6000 kbps) and the recording (2560 × 1440, AV1): [`docs/obs-output.md`](docs/obs-output.md).
+- [x] **4.** The profile for Twitch (1600 × 900 at 60 fps, H.264 CBR 6000 kbps) and the recording (2560 × 1440, AV1): [`docs/obs-output.md`](docs/obs-output.md) (#5).
 
 ## First live
 
