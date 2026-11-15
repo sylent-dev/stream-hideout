@@ -19,6 +19,7 @@ The channel **SylentExile** streams Path of Exile 2 in French, for three reasons
 - [x] The images of the three panels, in the storm style of the scenes, with the owner's logos: [`docs/texts/twitch-channel.md`](docs/texts/twitch-channel.md#images) (#9).
 - [x] **8.** The guide of the stream test, run as a real live: [`docs/stream-test.md`](docs/stream-test.md) (#11).
 - [x] The offline image and the profile banner of the channel, in the style of the scenes, with the SYLENT logo: [`docs/texts/twitch-channel.md`](docs/texts/twitch-channel.md#offline-image-and-profile-banner) (#12).
+- [x] The glow and the badge of the webcam, for the mode played (hardcore or softcore, SSF): [`docs/obs-scenes.md`](docs/obs-scenes.md#the-mode-played-glow-and-badge) (#13).
 
 ## First live
 
