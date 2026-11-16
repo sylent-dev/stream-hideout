@@ -12,8 +12,8 @@
 
   The offline image is drawn at the size of the OBS canvas (2560 × 1440), as the owner asked on
   2026-11-15. Twitch fills the header of the channel page with the banner and keeps a thin band in
-  the middle of its height (about 2320 × 188 px on a 2560 px wide screen): the chosen banner (10)
-  is 2560 × 512, its content inside that band, which the mock-up shows dashed. The rain is drawn from a seed per proposal, so that an image stays the same from one reload
+  the middle of its height (about 2320 × 188 px on a 2560 px wide screen): the chosen banner (11,
+  since 2026-11-16) is 2560 × 512, its content inside that band, which the mock-up shows dashed. The rain is drawn from a seed per proposal, so that an image stays the same from one reload
   to the next. "?only=<number>" shows one image alone at its real size, for the export.
 
   Serve the repository root, then open http://127.0.0.1:8790/docs/mockups/channel-images.html :
@@ -87,6 +87,7 @@
   .img-banner .img-wordmark + .img-subtitle { margin-top: calc(var(--banner-title) * .3); }
   .img-banner .img-inline { flex-direction: row; justify-content: center; align-items: center; gap: 44px; }
   .img-banner .img-inline .img-wordmark { height: var(--band-logo); }
+  .img-banner .img-inline.is-logo-only .img-wordmark { height: calc(var(--band-logo) * .75); }
   .img-banner .img-inline .img-subtitle { margin: 0; font-size: calc(var(--band-logo) * .62); }
   /* What Twitch keeps of the banner on a wide screen (inputs/empty-home.png, 2026-11-15): it fills
      a header about 2320 × 188 px, so only a band in the middle of the height shows. */
@@ -156,7 +157,10 @@
 
   // Every proposal, numbered once across the page. lightning: null, "white" or "red"; ghost: the giant word it reveals.
   const SECTIONS = [
-    ["Chosen banner (2026-11-15): 10, made for Twitch's crop, the logo at 90 px", [
+    ["Chosen banner (2026-11-16): 11, proposal 10 with the logo alone, a quarter smaller (68 px), centered", [
+      { number: 11, seed: 10, name: "Bandeau · logo SYLENT seul", text: "Proposal 10 without « Chill et craft »: the logo alone, centered, three quarters of the band logo (68 px for 90); the same rain as 10.", kind: "banner", size: [2560, 512], crop: true, html: `<div class="img-layer img-center img-inline is-logo-only"><div class="img-wordmark" role="img" aria-label="Sylent"></div></div>`, lightning: null, rings: false },
+    ]],
+    ["Previous banner (2026-11-15): 10, made for Twitch's crop, the logo at 90 px", [
       { number: 10, name: "Bandeau · logo SYLENT", text: "2560 × 512: Twitch fills its header with the image and keeps only a band in the middle (dashed); the logo and the subtitle sit in that band, the rain fills the rest.", kind: "banner", size: [2560, 512], crop: true, html: `<div class="img-layer img-center img-inline"><div class="img-wordmark" role="img" aria-label="Sylent"></div><p class="img-subtitle">${T.banner.tagline}</p></div>`, lightning: null, rings: false },
     ]],
     ["Chosen offline image (2026-11-15): 8, proposal 1 without the rings; banner 9 set aside, since Twitch crops it to a thin band", [
@@ -198,7 +202,7 @@
     canvas.height = H * ratio;
     const context = canvas.getContext("2d");
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    const random = seeded(proposal.number * 7 + 3);
+    const random = seeded((proposal.seed ?? proposal.number) * 7 + 3);
     const between = (low, high) => low + random() * (high - low);
     const RED = "229, 56, 59";
     const WHITE = "210, 218, 228";
