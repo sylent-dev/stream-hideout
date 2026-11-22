@@ -1,0 +1,20 @@
+2026/11/22 20:00:04 1000000 5a1e0001 [DEBUG Client 320] Generating level 65 area "HideoutDreadnought" with seed 1
+2026/11/22 20:00:04 1000071 5a1e0002 [INFO Client 320] [SCENE] Set Source [(null)]
+2026/11/22 20:00:04 1000073 5a1e0002 [INFO Client 320] [SCENE] Set Source [Repaire : Le Cuirassé]
+2026/11/22 20:00:41 1037210 5a1e0002 [INFO Client 320] [SCENE] Set Source [Atlas]
+2026/11/22 20:01:02 1058334 5a1e0001 [DEBUG Client 320] Generating level 79 area "MapSampleNest" with seed 1827364510
+2026/11/22 20:01:02 1058402 5a1e0002 [INFO Client 320] [SCENE] Set Source [(null)]
+2026/11/22 20:01:02 1058405 5a1e0002 [INFO Client 320] [SCENE] Set Source [Le Nid abominable]
+2026/11/22 20:04:17 1253119 5a1e0002 [INFO Client 320] : SylentFrost (Sorcière) a atteint le niveau 88.
+2026/11/22 20:06:55 1411580 5a1e0002 [INFO Client 320] * (Dév.): JoueurImaginaire (Niveau 97) vient de mourir à la 12e place du classement.
+2026/11/22 20:07:30 1446902 5a1e0002 [INFO Client 320] : SylentFrost vient de mourir.
+2026/11/22 20:07:41 1457233 5a1e0001 [DEBUG Client 320] Generating level 65 area "HideoutDreadnought" with seed 1
+2026/11/22 20:07:41 1457301 5a1e0002 [INFO Client 320] [SCENE] Set Source [(null)]
+2026/11/22 20:07:41 1457304 5a1e0002 [INFO Client 320] [SCENE] Set Source [Repaire : Le Cuirassé]
+2026/11/22 20:09:12 1548120 5a1e0001 [DEBUG Client 320] Generating level 79 area "MapSampleNest" with seed 1827364510
+2026/11/22 20:09:12 1548190 5a1e0002 [INFO Client 320] [SCENE] Set Source [(null)]
+2026/11/22 20:09:12 1548193 5a1e0002 [INFO Client 320] [SCENE] Set Source [Le Nid abominable]
+2026/11/22 20:11:48 1704551 5a1e0002 [INFO Client 320] [SCENE] Set Source [Acte 4]
+2026/11/22 20:11:53 1709830 5a1e0002 [INFO Client 320] [SCENE] Set Source [(null)]
+2026/11/22 20:11:53 1709832 5a1e0002 [INFO Client 320] [SCENE] Set Source [Le Nid abominable]
+2026/11/22 20:15:26 1923007 5a1e0002 [INFO Client 320] : SylentFrost (Sorcière) a atteint le niveau 89.

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HUD mock-up</title>
+<!--
+  The HUD of the scene `game` (roadmap step 9, html-mockups skill): a still band that shows the
+  character, its class and level, the area and its level, the deaths and the time live, without
+  hiding anything of the game.
+
+  - Every frame is the 2560 × 1440 canvas (docs/obs-output.md), drawn over a screenshot of the
+    game from inputs/, never committed (Grinding Gear Games' content); a frame falls back to a
+    dark background when its file is missing.
+  - The red zones are the interface of the game seen on that screenshot, measured by eye on it;
+    the orange ones are the two places of the price window of Exile Market, from its specs.md
+    (« Window over the game »: 420 px wide, beside the panel the item is in, its top level with
+    the cursor, so anywhere in that column). The webcam is where docs/obs-scenes.md puts it.
+  - The words come from overlays/hud/texts.js; the values are read from
+    overlays/hud/sample-client.txt, an invented log in the format of the game's (see readLog), or
+    are the longest samples, which test the width.
+  - Wireframe, chosen on 2026-11-22: place 1, bottom, right of the webcam (set aside: 2, top left
+    under the buffs, over the stash; 3, a thin band at the top, over the boss life bar and the
+    titles of the maps; 4, right above the mana, over the inventory). Place 1 covers nothing of
+    the game, but the bottom of the price window of Exile Market for an item of the inventory,
+    which Exile Market itself should keep above the HUD (the owner's application). The deaths
+    show in softcore only; a line too long ends with « … ».
+  - Styles 5 to 8 follow exile-market.sylent.tools (its docs/branding.md and src/styles/tokens.css)
+    and the scenes of overlays/screens/: neutral blacks and white, the red of Exile Market on a
+    few details, Manrope and Cormorant Garamond (assets/fonts/), sharp corners. Each style only
+    sets tokens under :root[data-theme="…"].
+  - Chosen on 2026-11-22: style 7, « On the game », without its red bar, every text 2 px smaller,
+    the HUD 24 px right of the webcam (X 1172). Set aside: 5 « Sober », 6 « Grid », 8 « Blood and
+    italics », kept on the page to compare.
+
+  Serve the repository root:
+    python3 .claude/skills/html-mockups/assets/serve.py 8790
+  then open http://127.0.0.1:8790/docs/mockups/hud.html
+-->
+<script src="../../overlays/hud/texts.js"></script>
+<style>
+  @font-face { font-family: "Manrope"; font-weight: 400; font-display: block; src: url("../../assets/fonts/manrope-regular.ttf") format("truetype"); }
+  @font-face { font-family: "Manrope"; font-weight: 600; font-display: block; src: url("../../assets/fonts/manrope-semibold.ttf") format("truetype"); }
+  @font-face { font-family: "Manrope"; font-weight: 800; font-display: block; src: url("../../assets/fonts/manrope-extrabold.ttf") format("truetype"); }
+  @font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 300 700; font-display: block; src: url("../../assets/fonts/cormorant-garamond-italic.ttf") format("truetype"); }
+
+  body { margin: 0; background: #2a2d31; color: #e9ecef; font: 14px/1.4 system-ui, sans-serif; }
+  .page-tabs { position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 16px; background: #1b1d20; border-bottom: 1px solid #3a3f45; }
+  .page-tabs .group { display: flex; align-items: center; gap: 4px; }
+  .page-tabs .group > span { margin-right: 4px; color: #adb5bd; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .page-tabs button { padding: 4px 10px; border: 1px solid #3a3f45; border-radius: 4px; background: #24272b; color: #dee2e6; font: inherit; cursor: pointer; }
+  .page-tabs button[aria-pressed="true"] { background: #e9ecef; color: #1b1d20; border-color: #e9ecef; }
+  .page-header { padding: 18px 16px 0; }
+  .page-header h1 { margin: 0 0 4px; font-size: 20px; }
+  .page-header p { margin: 0 0 6px; max-width: 900px; color: #adb5bd; }
+  .page-section { padding: 8px 16px 24px; scroll-margin-top: 60px; }
+  .page-section h2 { font-size: 15px; color: #adb5bd; font-weight: 600; }
+  .page-warning { margin: 0; padding: 10px 16px; background: #8a6a10; color: #fff; }
+  .page-covers { margin: 8px 0 0; color: #adb5bd; }
+  .page-covers b { color: #ff8787; }
+  .page-covers .is-clear { color: #8ce99a; }
+
+  /* A frame: the canvas at its real size, scaled down into a box of the scaled size. */
+  .wf-frame { position: relative; overflow: hidden; width: calc(2560px * var(--scale)); height: calc(1440px * var(--scale)); }
+  .wf-canvas { position: absolute; left: 0; top: 0; width: 2560px; height: 1440px; transform: scale(var(--scale)); transform-origin: 0 0; background: #0b0d12 center / cover no-repeat; }
+  .wf-box { position: absolute; box-sizing: border-box; }
+  .wf-zone { border: 3px dashed #ff6b6b; background: #ff6b6b1f; }
+  .wf-zone.is-price { border-color: #ffa94d; background: #ffa94d1a; }
+  .wf-zone > span { position: absolute; left: 4px; top: 2px; padding: 1px 6px; background: #000c; color: #ffc9c9; font: 600 22px/1.3 system-ui, sans-serif; white-space: nowrap; }
+  .wf-zone.is-price > span { color: #ffd8a8; }
+  .wf-zone.is-tall > span { writing-mode: vertical-rl; top: 40px; }
+  :root[data-zones="hidden"] .wf-zone { display: none; }
+  .wf-webcam { border-radius: 25px; background: #495057; display: grid; place-items: center; color: #dee2e6; font: 600 26px system-ui, sans-serif; }
+
+  /* Styles: tokens only. The numbers follow the places 1 to 4 of the wireframe. */
+  :root[data-theme="wireframe"] {
+    --hud-background: #343a40e6; --hud-border: 3px solid #adb5bd; --hud-radius: 0; --hud-padding: 8px 16px; --hud-shadow: none; --hud-accent: none;
+    --name-font: system-ui, sans-serif; --name-size: 30px; --name-weight: 700; --name-tracking: 0; --name-transform: none; --name-style: normal; --name-color: #fff; --name-rule: none;
+    --text-font: system-ui, sans-serif; --text-size: 30px; --text-weight: 500; --text-color: #fff; --weak-color: #ced4da; --label-color: #fff; --label-size: 1em; --label-transform: none; --label-tracking: 0;
+    --deaths-color: #fff; --text-halo: none; --line-gap: 2px;
+  }
+  /* 5 · Sober: a black card of the site, a hairline border, red on the deaths only. */
+  :root[data-theme="sober"] {
+    --hud-background: #0a0a0ad9; --hud-border: 1px solid #262626; --hud-radius: 2px; --hud-padding: 18px 24px; --hud-shadow: 0 12px 40px #000000b3; --hud-accent: none;
+    --name-font: "Manrope", sans-serif; --name-size: 36px; --name-weight: 800; --name-tracking: -0.045em; --name-transform: none; --name-style: normal; --name-color: #fff; --name-rule: none;
+    --text-font: "Manrope", sans-serif; --text-size: 26px; --text-weight: 600; --text-color: #fff; --weak-color: #a3a3a3; --label-color: #858585; --label-size: 1em; --label-transform: none; --label-tracking: 0;
+    --deaths-color: #e5383b; --text-halo: none; --line-gap: 4px;
+  }
+  /* 6 · Grid: the grid of the first screen of the site behind, a blood line with a glow on top,
+     the name and the labels in capitals. */
+  :root[data-theme="grid"] {
+    --hud-background: var(--grid-lines), #0a0a0ae6; --hud-border: none; --hud-radius: 0; --hud-padding: 20px 24px 18px; --hud-shadow: 0 12px 40px #000000b3; --hud-accent: 3px;
+    --name-font: "Manrope", sans-serif; --name-size: 30px; --name-weight: 800; --name-tracking: 0.04em; --name-transform: uppercase; --name-style: normal; --name-color: #fff; --name-rule: none;
+    --text-font: "Manrope", sans-serif; --text-size: 26px; --text-weight: 600; --text-color: #fff; --weak-color: #a3a3a3; --label-color: #858585; --label-size: 0.72em; --label-transform: uppercase; --label-tracking: 0.1em;
+    --deaths-color: #fff; --text-halo: none; --line-gap: 6px;
+    --grid-lines: linear-gradient(#ffffff0d 1px, transparent 1px) 0 0 / 24px 24px, linear-gradient(90deg, #ffffff0d 1px, transparent 1px) 0 0 / 24px 24px;
+  }
+  /* 7 · On the game, chosen on 2026-11-22: no card, the text straight on the game with the dark
+     halo of the site's first screen; the owner removed the red bar on the left and made every
+     text 2 px smaller (38 and 27 px before). */
+  :root[data-theme="bare"] {
+    --hud-background: none; --hud-border: none; --hud-radius: 0; --hud-padding: 6px 0; --hud-shadow: none; --hud-accent: none;
+    --name-font: "Manrope", sans-serif; --name-size: 36px; --name-weight: 800; --name-tracking: -0.045em; --name-transform: none; --name-style: normal; --name-color: #fff; --name-rule: none;
+    --text-font: "Manrope", sans-serif; --text-size: 25px; --text-weight: 600; --text-color: #fff; --weak-color: #d4d4d4; --label-color: #d4d4d4; --label-size: 1em; --label-transform: none; --label-tracking: 0;
+    --deaths-color: #ff5a5d; --text-halo: 0 1px 10px #000, 0 0 3px #000, 0 0 2px #000; --line-gap: 2px;
+  }
+  /* 8 · Blood and italics: the name in Cormorant Garamond italic, like the subtitles of the site
+     and of the scenes, a red rule under it, a veil fading to the right. */
+  :root[data-theme="italic"] {
+    --hud-background: linear-gradient(90deg, #0a0a0af2 0%, #0a0a0acc 70%, #0a0a0a80 100%); --hud-border: none; --hud-radius: 0; --hud-padding: 14px 24px 18px; --hud-shadow: none; --hud-accent: none;
+    --name-font: "Cormorant Garamond", serif; --name-size: 48px; --name-weight: 600; --name-tracking: 0; --name-transform: none; --name-style: italic; --name-color: #fff; --name-rule: 2px;
+    --text-font: "Manrope", sans-serif; --text-size: 25px; --text-weight: 600; --text-color: #fff; --weak-color: #a3a3a3; --label-color: #858585; --label-size: 1em; --label-transform: none; --label-tracking: 0;
+    --deaths-color: #e5383b; --text-halo: none; --line-gap: 4px;
+  }
+
+  /* The HUD: anchored by its bottom edge, so that it grows upwards; every line ends with « … »
+     when it is too long. */
+  .ovl-hud { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; gap: var(--line-gap); padding: var(--hud-padding);
+    background: var(--hud-background); border: var(--hud-border); border-radius: var(--hud-radius); box-shadow: var(--hud-shadow);
+    color: var(--text-color); font: var(--text-weight) var(--text-size) / 1.3 var(--text-font); text-shadow: var(--text-halo); font-variant-numeric: tabular-nums; }
+  .ovl-hud::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--hud-accent, 0); background: #e5383b; box-shadow: 0 0 14px #e5383b; }
+  :root:not([data-theme="grid"]) .ovl-hud::before { display: none; }
+  .ovl-hud.is-covering { outline: 4px solid #ff2a2a; outline-offset: 4px; }
+  .ovl-line { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .ovl-name { font: var(--name-style) var(--name-weight) var(--name-size) / 1.15 var(--name-font); letter-spacing: var(--name-tracking); text-transform: var(--name-transform); color: var(--name-color); }
+  .ovl-name::after { content: ""; display: block; width: 56px; height: var(--name-rule, 0); margin: 6px 0 4px; background: #e5383b; }
+  :root:not([data-theme="italic"]) .ovl-name::after { display: none; }
+  .ovl-weak { color: var(--weak-color); font-weight: 400; }
+  .ovl-label { color: var(--label-color); font-size: var(--label-size); text-transform: var(--label-transform); letter-spacing: var(--label-tracking); font-weight: 600; }
+  .ovl-deaths { color: var(--deaths-color); font-weight: 800; }
+  .ovl-separator { color: var(--label-color); }
+</style>
+</head>
+<body>
+<p class="page-warning" id="file-warning" hidden>Opened as a file: serve the repository root (see the comment at the top of this page) so that the fonts, the texts and the screenshots load.</p>
+<nav class="page-tabs" id="tabs" aria-label="Styles and variants"></nav>
+<main id="sheet"></main>
+<script>
+  const THEMES = {
+    sober: { title: "5 · Sober", text: "A black card of the site: a hairline border, sharp corners, the name in Manrope 800; red on the number of deaths only." },
+    grid: { title: "6 · Grid", text: "The grid of the site's first screen behind the text, a blood line with a glow on top, the name and the labels in capitals." },
+    bare: { title: "7 · On the game", text: "Chosen: no card, the text straight on the game with a dark halo, 24 px right of the webcam. The lightest on the picture." },
+    italic: { title: "8 · Blood and italics", text: "The name in Cormorant Garamond italic, like the subtitles of the scenes, a short red rule under it, a veil that fades to the right." },
+    wireframe: { title: "Wireframe", text: "The grey block of the wireframe, place 1 (chosen on 2026-11-22)." },
+  };
+  // Place 1 of the wireframe: between the webcam and the skills, its bottom above the experience bar.
+  // Moved closer to the webcam on 2026-11-22 (X 1236 before): 24 px after its right edge (1148).
+  const HUD_PLACE = { x: 1172, bottom: 1365, w: 460 };
+  // `log` is filled from overlays/hud/sample-client.txt; the time live doesn't come from the log
+  // (OBS knows when the live began).
+  const SAMPLES = {
+    log: { character: "?", className: "?", level: "?", area: "?", areaLevel: "?", deaths: 0, live: "1:24:07" },
+    long: { character: "Brumesylvestredesombres", className: "Chasseresse", level: 100, area: "Les Profondeurs de la Cité engloutie", areaLevel: 79, deaths: 12, live: "10:24:07" },
+  };
+  const VARIANTS = {
+    theme: { label: "Style", options: Object.fromEntries(Object.entries(THEMES).map(([key, theme]) => [key, theme.title])), fallback: "bare" },
+    sample: { label: "Texts", options: { log: "Sample log", long: "Longest" }, fallback: "log" },
+    mode: { label: "Mode", options: { softcore: "Softcore", hardcore: "Hardcore" }, fallback: "softcore" },
+    zones: { label: "Game zones", options: { hidden: "Hidden", shown: "Shown" }, fallback: "hidden" },
+    scale: { label: "Size", options: { "1": "Canvas 100 %", "0.625": "Stream 62.5 %", "0.25": "Phone 25 %" }, fallback: "0.625" },
+  };
+
+  // The lines of the log the HUD reads, as the French client writes them (checked in the owner's
+  // log on 2026-11-22). A death counts only for the character played: the log also announces the
+  // deaths of the ladder (« * (Dév.): <player> (Niveau 98) vient de mourir à la 27e place… »).
+  // The world map and the Atlas write « Set Source [Acte 1] » or « [Atlas] » when they open: the
+  // area entered is the name right after « [(null)] ».
+  function readLog(text) {
+    const state = { character: null, className: null, level: null, area: null, areaLevel: null, deaths: 0 };
+    let entering = false;
+    for (const line of text.split(/\r?\n/)) {
+      let match;
+      if ((match = line.match(/\] : (.+) \((.+)\) a atteint le niveau (\d+)\.$/))) {
+        [, state.character, state.className, state.level] = match;
+      } else if ((match = line.match(/\] : (\S+) vient de mourir\.$/))) {
+        if (match[1] === state.character) state.deaths += 1;
+      } else if ((match = line.match(/Generating level (\d+) area "/))) {
+        state.areaLevel = match[1];
+      } else if ((match = line.match(/\[SCENE\] Set Source \[(.*)\]$/))) {
+        if (match[1] === "(null)") entering = true;
+        else if (entering) { state.area = match[1]; entering = false; }
+      }
+    }
+    return state;
+  }
+
+  // The interface of the game, as each screenshot shows it, in pixels of the canvas.
+  const zone = (label, x, y, w, h, kind = "") => ({ label, x, y, w, h, kind });
+  const BOTTOM = [
+    zone("Life orb, flasks, charms", 0, 1145, 720, 295),
+    zone("Skills, mana orb", 1845, 1145, 715, 295),
+    zone("Experience bar, clock", 720, 1385, 1125, 55),
+  ];
+  const BOTTOM_TEXTS = [
+    zone("Life, energy shield", 30, 1085, 270, 60),
+    zone("Mana, spirit", 2290, 1085, 210, 60),
+  ];
+  const CHARACTER = zone("Character", 1180, 470, 210, 260);
+  const PRICE_WINDOWS = [
+    zone("Exile Market, item of the stash", 888, 0, 420, 1440, "price"),
+    zone("Exile Market, item of the inventory", 1252, 0, 420, 1440, "price"),
+  ];
+  const SCREENS = [
+    { title: "Boss fight", file: "Screenshot_20261122_164119.png", zones: [
+      zone("Buffs", 0, 0, 585, 110), zone("Boss life bar", 750, 38, 1065, 150), zone("Minimap", 2185, 0, 375, 270),
+      zone("Quests", 2090, 395, 470, 80), zone("Area counter", 1650, 1335, 140, 60), CHARACTER, ...BOTTOM_TEXTS, ...BOTTOM] },
+    { title: "Hideout: quests and minimap", file: "Screenshot_20261122_163921.png", zones: [
+      zone("Buffs", 0, 0, 490, 110), zone("Minimap", 2210, 0, 350, 300), zone("Quests", 2050, 395, 510, 570),
+      CHARACTER, ...BOTTOM_TEXTS, ...BOTTOM] },
+    { title: "Stash and inventory, with the price window of Exile Market", file: "Screenshot_20261115_150246.png", zones: [
+      zone("Stash", 0, 0, 888, 1065), zone("Stash search", 375, 1165, 500, 55), zone("Stash tabs (open list)", 888, 120, 200, 700),
+      zone("Buffs", 940, 0, 470, 110), zone("Minimap", 1370, 40, 310, 200), zone("Chat", 925, 535, 310, 30),
+      zone("Inventory", 1680, 0, 880, 1200), ...PRICE_WINDOWS, ...BOTTOM] },
+    { title: "World map", file: "Screenshot_20261122_164233.png", zones: [
+      zone("Info", 0, 0, 65, 65), zone("Title and acts", 935, 0, 690, 115), zone("Quests", 2310, 0, 250, 85),
+      zone("Chat", 40, 750, 220, 55), zone("Tooltip (hover)", 1925, 595, 615, 75), zone("Area counter", 1650, 1335, 140, 60),
+      ...BOTTOM_TEXTS, ...BOTTOM] },
+    { title: "Atlas", file: "Screenshot_20261122_164333.png", zones: [
+      zone("Atlas buttons", 0, 0, 115, 420), zone("Search and title", 750, 0, 890, 115), zone("Quests", 2310, 0, 250, 85),
+      zone("Atlas buttons", 2465, 370, 95, 460), ...BOTTOM_TEXTS, ...BOTTOM] },
+  ];
+  const WEBCAM = zone("Webcam", 898, 1155, 250, 250, "webcam");
+
+  const params = new URLSearchParams(location.search);
+  const chosen = Object.fromEntries(Object.entries(VARIANTS).map(([key, variant]) =>
+    [key, params.get(key) in variant.options ? params.get(key) : variant.fallback]));
+
+  const at = ({ x, y, w, h }) => `left:${x}px;top:${y}px;width:${w}px;height:${h}px`;
+  const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+  function hudBlock() {
+    const T = window.TEXTS.hud;
+    const sample = SAMPLES[chosen.sample];
+    const separator = `<span class="ovl-separator">${T.separator}</span>`;
+    const live = `<span class="ovl-label">${T.live}</span> ${sample.live}`;
+    // In hardcore a death ends the character: no counter (owner, 2026-11-22).
+    const counters = chosen.mode === "hardcore" ? live
+      : `<span class="ovl-label">${T.deaths}</span> <span class="ovl-deaths">${sample.deaths}</span>${separator}${live}`;
+    return `<div class="ovl-hud" style="left:${HUD_PLACE.x}px;bottom:${1440 - HUD_PLACE.bottom}px;max-width:${HUD_PLACE.w}px">
+        <div class="ovl-line ovl-name">${sample.character}</div>
+        <div class="ovl-line">${sample.className} <span class="ovl-weak">${T.level} ${sample.level}</span></div>
+        <div class="ovl-line">${sample.area} <span class="ovl-weak">${T.level} ${sample.areaLevel}</span></div>
+        <div class="ovl-line">${counters}</div>
+      </div>`;
+  }
+  function zoneBox(item) {
+    const tall = item.h > item.w * 2 && item.w < 260 ? "is-tall" : "";
+    return `<div class="wf-box wf-zone ${item.kind === "price" ? "is-price" : ""} ${tall}" style="${at(item)}"><span>${item.label}</span></div>`;
+  }
+
+  // What the HUD covers, measured on its drawn box once the page is laid out.
+  function reportCovers() {
+    for (const frameElement of document.querySelectorAll(".wf-frame")) {
+      const screen = SCREENS[frameElement.dataset.screen];
+      const hud = frameElement.querySelector(".ovl-hud");
+      const box = { x: hud.offsetLeft, y: hud.offsetTop, w: hud.offsetWidth, h: hud.offsetHeight };
+      const covered = [...new Set([...screen.zones, WEBCAM].filter(item => overlaps(box, item)).map(item => item.label))];
+      hud.classList.toggle("is-covering", covered.length > 0 && chosen.zones === "shown");
+      frameElement.nextElementSibling.innerHTML = `HUD ${box.w} × ${box.h} px on the canvas — covers: ${covered.length
+        ? `<b>${covered.join(", ")}</b>` : `<span class="is-clear">nothing</span>`}`;
+    }
+  }
+
+  function render() {
+    for (const key of Object.keys(VARIANTS)) document.documentElement.dataset[key] = chosen[key];
+    document.documentElement.style.setProperty("--scale", chosen.scale);
+    document.getElementById("tabs").innerHTML = Object.entries(VARIANTS).map(([key, variant]) =>
+      `<div class="group"><span>${variant.label}</span>${Object.entries(variant.options).map(([value, label]) =>
+        `<button type="button" data-variant="${key}" data-value="${value}" aria-pressed="${chosen[key] === value}">${label}</button>`).join("")}</div>`).join("");
+    const theme = THEMES[chosen.theme];
+    document.getElementById("sheet").innerHTML = `
+      <header class="page-header"><h1>HUD — ${theme.title}</h1><p>${theme.text}</p>
+        <p>Place 1 of the wireframe. Show the game zones to see what the HUD covers: the red ones are the interface of the game, the orange ones where the price window of Exile Market can open.</p></header>
+      ${SCREENS.map((screen, index) => `<section class="page-section" id="section-${index + 1}"><h2>${screen.title}</h2>
+        <div class="wf-frame" data-screen="${index}"><div class="wf-canvas" style="background-image:url('../../inputs/${screen.file}')">
+          ${screen.zones.map(zoneBox).join("")}
+          <div class="wf-box wf-webcam" style="${at(WEBCAM)}">Webcam</div>
+          ${hudBlock()}
+        </div></div><p class="page-covers"></p></section>`).join("")}`;
+    document.fonts.ready.then(reportCovers);
+  }
+
+  document.getElementById("tabs").addEventListener("click", event => {
+    const { variant, value } = event.target.dataset;
+    if (!variant || value === undefined) return;
+    chosen[variant] = value;
+    history.replaceState(null, "", "?" + new URLSearchParams(chosen));
+    render();
+  });
+  document.getElementById("file-warning").hidden = location.protocol !== "file:";
+  render();
+  fetch("../../overlays/hud/sample-client.txt", { cache: "no-store" })
+    .then(response => response.ok ? response.text() : Promise.reject(response.status))
+    .then(text => {
+      for (const [key, value] of Object.entries(readLog(text))) if (value !== null) SAMPLES.log[key] = value;
+      render();
+    })
+    .catch(error => console.warn("The sample log can't be read:", error));
+</script>
+</body>
+</html>
